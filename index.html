@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <title>San Francisco Meetup Events</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  </head>
+
+  <body class="container">
+
+    <header class="row">
+      <div class="col-xs-12 col-md-2">
+        <img class="logo-image" src="img/highres_454596637.png" alt="Meetup logo">
+      </div>
+      <div class="col-xs-12 col-md-10">
+        <h1 class="name-and-title">Find Meetup Events in San Francisco</h1>
+      </div>
+      <div class="col-xs-12">
+        <hr>
+      </div>
+    </header>
+
+    <main>
+      <div class="row">
+
+        <div id="sidebar-col" class="col-xs-12 col-md-2">
+
+          <div class="row">
+            <div id="dates-col" class="col-xs-12 col-md-12">
+              <h4 class="h4-list">Date Range</h4>
+              <div>
+                <label>Number of Days: <input id="days" type="text"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="location-col" class="col-xs-12 col-md-12">
+              <h4 class="h4-list">Location</h4>
+              <input id="locationInput" type="text">
+              <div>
+                <label>Search Radius: <input id="searchRadius" type="text"></label>
+              </div>
+              <div>
+                <button id="clearButton" name="clear">Clear</button>
+                <button id="searchButton" name="search">Search</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="neighborhood-col" class="col-xs-12 col-md-12">
+              <h4 class="h4-list">Neighborhood</h4>
+              <p>Bernal Heights</p>
+              <p>Bayview/Hunters Point</p>
+              <p>Castro</p>
+              <p>Chinatown</p>
+              <p>Civic Center + Tenderloin</p>
+              <p>Cole Valley</p>
+              <p>Dogpatch</p>
+              <p>Embarcadero</p>
+              <p>Excelsior</p>
+              <p>Financial District</p>
+              <p>Fisherman's Wharf</p>
+              <p>Glen Park</p>
+              <p>Height + Ashbury</p>
+              <p>Hayes Valley</p>
+              <p>Ingleside</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="topics-col" class="col-xs-12 col-md-10">
+          <h4 id="topics">Topics</h4>
+          <span class="topic">Books</span>
+          <span class="topic">Cycling</span>
+          <span class="topic">Dining</span>
+          <span class="topic">Games</span>
+          <span class="topic">Hiking</span>
+          <span class="topic">Italian</span>
+          <span class="topic">Lectures</span>
+          <span class="topic">Skiing</span>
+          <span class="topic">Travel</span>
+        </div>
+
+        <div id="map-col" class="col-xs-12 col-md-10">
+          <div id="map">Map</div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Copyright statement for footer -->
+    <footer class="row">
+      <div class="col-xs-12">
+        <hr>
+        <p class="footer-copyright">Copyright &#169; 2016 Bert Ciccone</p>
+      </div>
+    </footer>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+
+    <!-- Load scripts after loading rest of page -->
+    <style>
+      /* Global Styles */
+
+      * {
+        outline: 1px solid red !important;
+      }
+      /* RGB
+    $color1: rgba(51, 102, 153, 1);
+    $color2: rgba(134, 187, 216, 1);
+    $color3: rgba(47, 72, 88, 1);
+    $color4: rgba(158, 228, 147, 1);
+    $color5: rgba(218, 247, 220, 1);
+    */
+
+      body {
+        font-family: "Roboto", sans-serif;
+        /*background-color: rgba(218, 247, 220, 1);*/
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-weight: 100;
+        color: rgba(51, 102, 153, 1);
+      }
+
+      h4 {
+        font-weight: 400;
+        color: rgba(51, 102, 153, 1);
+      }
+
+      h1,
+      h4 {
+        text-transform: uppercase;
+      }
+
+      hr {
+        background-color: rgba(158, 228, 147, 1);
+        height: .2em;
+      }
+
+      header {
+        margin-top: 1em;
+      }
+
+      li {
+        list-style: none;
+      }
+      /* Header Styles */
+
+      .logo-image {
+        text-align: left;
+        width: 8em;
+      }
+
+      .name-and-title {
+        margin-top: 1em;
+        text-align: center;
+      }
+      /* Hero Styles */
+
+      .hero-image {
+        margin-top: 1em;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #map {
+        height: 620px;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        position: absolute;
+      }
+
+      .topic {
+        display: inline;
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+      /* Click Styles */
+
+      .h4-list {
+        text-align: left;
+        font-weight: bold;
+      }
+
+      .h3-name {
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .h3-clicks {
+        text-align: center;
+      }
+
+      .h3-menu {
+        text-align: left;
+      }
+      /* Footer Styles */
+
+      .footer-copyright {
+        font-weight: 100;
+        color: rgba(134, 187, 216, 1);
+        text-align: center;
+      }
+      /* Responsive Styles */
+
+      @media screen and (max-width: 767px) {
+        header {
+          text-align: center;
+        }
+        .name-and-title {
+          text-align: center;
+        }
+        .h4-list {
+          text-align: center;
+        }
+        .h3-menu {
+          display: inline-flex;
+          margin: 10px;
+        }
+      }
+    </style>
+    <script src="js/lib/jquery-3.1.0.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="js/model/appdata.js"></script>
+    <script src="js/view/map.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.initMap"></script>
+    <script src="js/view/mapfilters.js"></script>
+    <script src="js/view/mapneighborhoods.js"></script>
+    <script src="js/sfmeetups.js"></script>
+  </body>
+
+</html>
