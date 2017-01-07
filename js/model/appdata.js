@@ -8,7 +8,6 @@ var meetupapp = meetupapp || {};
   meetupapp.lat = 37.77;
   meetupapp.zoom = 13;
   meetupapp.days = "1d";
-  meetupapp.events = [];
 
   // Create a styles array to use with the map.
   meetupapp.styles = [{
