@@ -15,13 +15,10 @@ var meetupapp = meetupapp || {};
     this.name = ko.observable(data);
   };
 
-  meetupapp.setSearchLocation = function (position) {
-    console.log("Setting location to: ", position.lng, position.lat);
-    // Need to be careful about passing LatLng objects when needed
-    // myLatLng = new google.maps.LatLng({lat: -34, lng: 151});
-    meetupapp.locationLng = position.lng;
-    meetupapp.locationLat = position.lat;
-    meetupapp.setSearchLocationMarker(position);
+  meetupapp.setLocationFilterCoords = function (location) {
+    console.log("Setting location filter coordinates to: ", location);
+    meetupapp.locationFilterCoords = location;
+    meetupapp.setLocationFilterMarker(location);
   }
 
   var ViewModel = function () {
@@ -78,10 +75,10 @@ var meetupapp = meetupapp || {};
       // Avoid using Google Maps to calculate driving distance to each event destination. Instead, use an approximation for distance "as the bird flies" from http://www.movable-type.co.uk/scripts/latlong.html.
       var R = 6371e3; // meters
       var r = Math.PI / 180;
-      var λ1 = meetupapp.locationLng * r;
-      var λ2 = event.venueLng * r;
-      var φ1 = meetupapp.locationLat * r;
-      var φ2 = event.venueLat * r;
+      var λ1 = meetupapp.locationFilterCoords.lng * r;
+      var λ2 = event.venueCoords.lng * r;
+      var φ1 = meetupapp.locationFilterCoords.lat * r;
+      var φ2 = event.venueCoords.lat * r;
       var x = (λ2 - λ1) * Math.cos((φ1 + φ2) / 2);
       var y = (φ2 - φ1);
       var d = Math.sqrt(x * x + y * y) * R; // meters
@@ -101,7 +98,7 @@ var meetupapp = meetupapp || {};
       console.log("Exit applyEventFilters");
     };
 
-    self.geocodeSearchLocation = function () {
+    self.geocodeLocationFilter = function () {
       var geocoder = new google.maps.Geocoder();
       var address = self.eventFilters.locationFilter();
       // Make sure the address isn't blank.
@@ -115,22 +112,22 @@ var meetupapp = meetupapp || {};
           }
         }, function (results, status) {
           if (status === google.maps.GeocoderStatus.OK) {
-            console.log("Location: ", results[0].geometry.location.lat(), results[0].geometry.location.lng());
-            meetupapp.setSearchLocation(results[0].geometry.location);
+            var location = {
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng()
+            };
+            console.log("Location filter coordinates: ", location);
+            meetupapp.setLocationFilterCoords(location);
             self.applyEventFilters();
           } else {
             window.alert('We could not find that location - try entering a more' +
               ' specific place.');
           }
         });
-        // } else {
-        //   console.log("Address: ", address);
-        //   meetupapp.setSearchLocation({
-        //     lng: meetupapp.sfLng,
-        //     lat: meetupapp.sfLat
-        //   });
-        //   self.applyEventFilters();
-        //   alert("Exit geocoding");
+      } else {
+        console.log("Address: ", address);
+        meetupapp.setLocationFilterCoords(meetupapp.sfCoords);
+        self.applyEventFilters();
       };
     };
 
@@ -167,10 +164,7 @@ var meetupapp = meetupapp || {};
     .done(function () {
       console.log("Event initialization success.");
       console.log(meetupapp.categories);
-      meetupapp.setSearchLocation({
-        lng: meetupapp.sfLng,
-        lat: meetupapp.sfLat
-      });
+      meetupapp.setLocationFilterCoords(meetupapp.sfCoords);
       meetupapp.initMarkers();
       ko.applyBindings(new ViewModel());
     })

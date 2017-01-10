@@ -27,7 +27,7 @@
 
         <div id="sidebar-col" class="col-xs-12 col-md-3">
 
-          <form data-bind="submit: geocodeSearchLocation">
+          <form data-bind="submit: geocodeLocationFilter">
 
             <div class="row">
               <div id="dates-col" class="col-xs-12 col-md-12">
@@ -48,7 +48,7 @@
                     <select data-bind="options: rangeFilterOptions, optionsText: 'name', optionsValue: 'miles', value: eventFilters.rangeFilter, event: {change: applyEventFilters}">
                   </select>
                 of</label>
-                <input id="searchLocation" type="text" placeholder="Address, neighborhood, zip or landmark" data-bind="textInput: eventFilters.locationFilter">
+                <input id="locationFilter" type="text" placeholder="Address, neighborhood, zip or landmark" data-bind="textInput: eventFilters.locationFilter">
                 <button id="searchButton" name="search" type="submit">Search</button>
               </div>
             </div>
@@ -183,7 +183,7 @@
         margin-right: 5px;
       }
 
-      #searchLocation {
+      #locationFilter {
         width: 100%;
       }
       /* Click Styles */

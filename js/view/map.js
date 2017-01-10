@@ -98,11 +98,9 @@ var meetupapp = meetupapp || {};
     // mouses over the marker.
     var highlightedIcon = meetupapp.makeMarkerIcon('FFFF24');
 
+    var position = new google.maps.LatLng(event.venueCoords);
     var marker = new google.maps.Marker({
-      position: {
-        lat: event.venueLat,
-        lng: event.venueLng
-      },
+      position,
       title: event.name,
       animation: google.maps.Animation.DROP,
       icon: defaultIcon,
@@ -127,22 +125,23 @@ var meetupapp = meetupapp || {};
     return marker;
   };
 
-  meetupapp.setSearchLocationMarker = function (position) {
-    if (meetupapp.searchLocationMarker) {
-      meetupapp.searchLocationMarker.setMap(null);
-      meetupapp.searchLocationMarker.position = position;
+  meetupapp.setLocationFilterMarker = function (location) {
+    var position = new google.maps.LatLng(location);
+    if (meetupapp.locationFilterMarker) {
+      meetupapp.locationFilterMarker.setMap(null);
+      meetupapp.locationFilterMarker.position = position;
     } else {
-      var searchLocationIcon = meetupapp.makeMarkerIcon('f00');
-      console.log("Making marker", position);
-      meetupapp.searchLocationMarker = new google.maps.Marker({
+      var locationFilterIcon = meetupapp.makeMarkerIcon('f00');
+      console.log("Setting location filter marker", location);
+      meetupapp.locationFilterMarker = new google.maps.Marker({
         position,
         title: "Your Search Location",
         animation: google.maps.Animation.DROP,
-        icon: searchLocationIcon
+        icon: locationFilterIcon
       });
     };
     console.log("Setting map for search location marker");
-    meetupapp.searchLocationMarker.setMap(meetupapp.map);
+    meetupapp.locationFilterMarker.setMap(meetupapp.map);
   };
 
   meetupapp.showMarker = function (id, show) {
@@ -206,10 +205,7 @@ var meetupapp = meetupapp || {};
   meetupapp.initMap = function () {
     meetupapp.largeInfowindow = new google.maps.InfoWindow();
     // Constructor creates a new map - only center and zoom are required.
-    var position = {
-      lat: meetupapp.sfLat,
-      lng: meetupapp.sfLng
-    };
+    var position = new google.maps.LatLng(meetupapp.sfCoords);
     meetupapp.map = new google.maps.Map(document.getElementById('map'), {
       center: position,
       zoom: meetupapp.zoom,

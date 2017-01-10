@@ -4,15 +4,16 @@ var meetupapp = meetupapp || {};
 (function () {
   'use strict';
   console.log("appdata.js");
-  meetupapp.sfLng = -122.44;
-  meetupapp.sfLat = 37.76;
+  meetupapp.sfCoords = {
+    lat: 37.76,
+    lng: -122.44
+  }
   meetupapp.zoom = 13;
   meetupapp.queryTime = Date.now();
   meetupapp.dateFilter = 3;
   meetupapp.rangeFilter = 4;
   meetupapp.locationFilter = "";
-  meetupapp.locationLng = meetupapp.sfLng;
-  meetupapp.locationLat = meetupapp.sfLat;
+  meetupapp.locationFilterCoords = meetupapp.sfCoords;
 
   meetupapp.initEvents = function () {
 
@@ -56,8 +57,10 @@ var meetupapp = meetupapp || {};
             yes_rsvp_count: eventData.yes_rsvp_count,
             venueName: eventData.venue.name,
             venueAddress: eventData.venue.address_1,
-            venueLat: eventData.venue.lat,
-            venueLng: eventData.venue.lon,
+            venueCoords: {
+              lat: eventData.venue.lat,
+              lng: eventData.venue.lon
+            },
             event_url: eventData.event_url,
             id: meetupapp.events.length
           };
