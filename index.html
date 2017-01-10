@@ -11,10 +11,10 @@
   <body class="container">
 
     <header class="row">
-      <div class="col-xs-12 col-md-2">
+      <div class="col-xs-12 col-md-3">
         <img class="logo-image" src="img/highres_454596637.png" alt="Meetup logo">
       </div>
-      <div class="col-xs-12 col-md-10">
+      <div class="col-xs-12 col-md-9">
         <h1 class="name-and-title">Find Meetup Events in San Francisco</h1>
       </div>
       <div class="col-xs-12">
@@ -25,67 +25,55 @@
     <main>
       <div class="row">
 
-        <div id="sidebar-col" class="col-xs-12 col-md-2">
+        <div id="sidebar-col" class="col-xs-12 col-md-3">
 
-          <div class="row">
-            <div id="dates-col" class="col-xs-12 col-md-12">
-              <h4 class="h4-list">Date Range</h4>
-              <div>
-                <label>Number of Days: <input id="days" type="text"></label>
+          <form data-bind="submit: geocodeSearchLocation">
+
+            <div class="row">
+              <div id="dates-col" class="col-xs-12 col-md-12">
+                <h4 class="h4-list">Date Range</h4>
+                <div>
+                  <label>Meeting in the next
+                <select data-bind="options: dateFilterOptions, optionsText: 'name', optionsValue: 'days', value: eventFilters.dateFilter, event: {change: applyEventFilters}">
+                </select>
+                </label>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div id="location-col" class="col-xs-12 col-md-12">
-              <h4 class="h4-list">Location</h4>
-              <input id="locationInput" type="text">
-              <div>
-                <label>Search Radius: <input id="searchRadius" type="text"></label>
-              </div>
-              <div>
-                <button id="clearButton" name="clear">Clear</button>
-                <button id="searchButton" name="search">Search</button>
+            <div class="row">
+              <div id="location-col" class="col-xs-12 col-md-12">
+                <h4 class="h4-list">Location</h4>
+                <label>Within
+                    <select data-bind="options: rangeFilterOptions, optionsText: 'name', optionsValue: 'miles', value: eventFilters.rangeFilter, event: {change: applyEventFilters}">
+                  </select>
+                of</label>
+                <input id="searchLocation" type="text" placeholder="Address, neighborhood, zip or landmark" data-bind="textInput: eventFilters.locationFilter">
+                <button id="searchButton" name="search" type="submit">Search</button>
               </div>
             </div>
-          </div>
+
+          </form>
 
           <div class="row">
             <div id="events-col" class="col-xs-12 col-md-12">
               <h4 class="h4-list">Events</h4>
-              <p>My Book Reading Night</p>
-              <p>My Bike Ride</p>
-              <p>My Cooking Class</p>
-              <p>My Hike in the Mountains</p>
-              <p>My Happy Hour</p>
-              <p>My Italian Language Dinner</p>
-              <p>My Environmental Lecture</p>
-              <p>My Ski Trip</p>
-              <p>My Travel Tips Meetup</p>
-              <p>My Book Reading Night</p>
-              <p>My Bike Ride</p>
-              <p>My Cooking Class</p>
-              <p>My Hike in the Mountains</p>
-              <p>My Happy Hour</p>
+              <div data-bind="foreach: eventList">
+                <p data-bind="text: name, click: $parent.selectEventListItem, visible: visible" class="eventListItem"></p>
+              </div>
             </div>
           </div>
 
         </div>
 
-        <div id="categories-col" class="col-xs-12 col-md-10">
-          <h4 id="category">Categories</h4>
-          <span class="category">Books</span>
-          <span class="category">Cycling</span>
-          <span class="category">Dining</span>
-          <span class="category">Games</span>
-          <span class="category">Hiking</span>
-          <span class="category">Italian</span>
-          <span class="category">Lectures</span>
-          <span class="category">Skiing</span>
-          <span class="category">Travel</span>
+        <div id="categories-col" class="col-xs-12 col-md-9">
+          <h4 id="category" class="h4-list">Categories</h4>
+          <div data-bind="foreach: categoryList">
+            <span data-bind="text: name, click: $parent.selectCategoryListItem" class="categoryListItem"></span>
+          </div>
         </div>
 
-        <div id="map-col" class="col-xs-12 col-md-10">
+        <div id="map-col" class="col-xs-12 col-md-9">
           <div id="map">Map</div>
         </div>
 
@@ -172,7 +160,7 @@
       }
 
       #map {
-        height: 620px;
+        height: 800px;
         top: 0px;
         bottom: 0px;
         left: 0px;
@@ -184,6 +172,19 @@
         display: inline;
         margin-left: 15px;
         margin-right: 15px;
+      }
+
+      .eventListItem {
+        background: rgba(158, 228, 147, 1);
+      }
+
+      .categoryListItem {
+        background: rgba(134, 187, 216, 1);
+        margin-right: 5px;
+      }
+
+      #searchLocation {
+        width: 100%;
       }
       /* Click Styles */
 
@@ -234,10 +235,10 @@
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/model/appdata.js"></script>
     <script src="js/view/map.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.initMap"></script>
     <script src="js/view/mapfilters.js"></script>
     <script src="js/view/mapneighborhoods.js"></script>
     <script src="js/sfmeetups.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.initMap"></script>
   </body>
 
 </html>

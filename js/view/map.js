@@ -5,6 +5,77 @@ var meetupapp = meetupapp || {};
   'use strict';
   console.log("map.js");
 
+  // Create a styles array to use with the map.
+  var styles = [{
+    featureType: 'water',
+    stylers: [{
+      color: '#19a0d8'
+    }]
+  }, {
+    featureType: 'administrative',
+    elementType: 'labels.text.stroke',
+    stylers: [{
+      color: '#ffffff'
+    }, {
+      weight: 6
+    }]
+  }, {
+    featureType: 'administrative',
+    elementType: 'labels.text.fill',
+    stylers: [{
+      color: '#e85113'
+    }]
+  }, {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{
+      color: '#efe9e4'
+    }, {
+      lightness: -40
+    }]
+  }, {
+    featureType: 'transit.station',
+    stylers: [{
+      weight: 9
+    }, {
+      hue: '#e85113'
+    }]
+  }, {
+    featureType: 'road.highway',
+    elementType: 'labels.icon',
+    stylers: [{
+      visibility: 'off'
+    }]
+  }, {
+    featureType: 'water',
+    elementType: 'labels.text.stroke',
+    stylers: [{
+      lightness: 100
+    }]
+  }, {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{
+      lightness: -100
+    }]
+  }, {
+    featureType: 'poi',
+    elementType: 'geometry',
+    stylers: [{
+      visibility: 'on'
+    }, {
+      color: '#f0e4d3'
+    }]
+  }, {
+    featureType: 'road.highway',
+    elementType: 'geometry.fill',
+    stylers: [{
+      color: '#efe9e4'
+    }, {
+      lightness: -25
+    }]
+  }];
+
   // This function takes in a COLOR, and then creates a new marker
   // icon of that color. The icon will be 21 px wide by 34 high, have an origin
   // of 0, 0 and be anchored at 10, 34).
@@ -17,48 +88,7 @@ var meetupapp = meetupapp || {};
       new google.maps.Point(10, 34),
       new google.maps.Size(21, 34));
     return markerImage;
-  }
-
-  // This function will loop through the markers array and display them all.
-  meetupapp.showListings = function () {
-    var bounds = new google.maps.LatLngBounds();
-    // Extend the boundaries of the map for each event and display the marker
-    for (var i = 0; i < meetupapp.markers.length; i++) {
-      meetupapp.markers[i].setMap(meetupapp.map);
-      // bounds.extend(meetupapp.markers[i].position);
-    }
-    // meetupapp.map.fitBounds(bounds);
-  }
-
-  // This function populates the infowindow when the marker is clicked. We'll only allow
-  // one infowindow which will open at the marker that is clicked, and populate based
-  // on that markers position.
-  meetupapp.populateInfoWindow = function (marker, event, infowindow) {
-    // Check to make sure the infowindow is not already opened on this marker.
-    if (infowindow.marker != marker) {
-      // Clear the infowindow content to give the streetview time to load.
-      infowindow.setContent('');
-      infowindow.marker = marker;
-      // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick', function () {
-        infowindow.marker = null;
-      });
-      var date = new Date(event.time);
-      infowindow.setContent(
-        '<img class="logo-image" src="' + event.group_photo + '">' +
-        '<div>Group: ' + event.groupName + '</div>' +
-        '<div>Event: ' + event.name + '</div>' +
-        '<div>Date: ' + date.toLocaleDateString() + '</div>' +
-        '<div>Time: ' + date.toLocaleTimeString() + '</div>' +
-        '<div>RSVP Yes: ' + event.yes_rsvp_count + '</div>' +
-        '<div>Venue: ' + event.venueName + '</div>' +
-        '<div>Address: ' + event.venueAddress + '</div>' +
-        '<a target="_blank" href="' + event.event_url + '">Event page on Meetup.com</a>'
-      );
-      // Open the infowindow on the correct marker.
-      infowindow.open(map, marker);
-    }
-  }
+  };
 
   meetupapp.createMarker = function (event, id) {
 
@@ -81,8 +111,8 @@ var meetupapp = meetupapp || {};
 
     // Create an onclick event to open the large infowindow at each marker.
     marker.addListener('click', function () {
-      // console.log("clicked marker: ", this);
-      meetupapp.populateInfoWindow(this, meetupapp.events[this.id], meetupapp.largeInfowindow);
+      var self = this;
+      meetupapp.populateInfoWindow(self, meetupapp.events[self.id], meetupapp.largeInfowindow);
     });
 
     // Two event listeners - one for mouseover, one for mouseout,
@@ -97,74 +127,104 @@ var meetupapp = meetupapp || {};
     return marker;
   };
 
+  meetupapp.setSearchLocationMarker = function (position) {
+    if (meetupapp.searchLocationMarker) {
+      meetupapp.searchLocationMarker.setMap(null);
+      meetupapp.searchLocationMarker.position = position;
+    } else {
+      var searchLocationIcon = meetupapp.makeMarkerIcon('f00');
+      console.log("Making marker", position);
+      meetupapp.searchLocationMarker = new google.maps.Marker({
+        position,
+        title: "Your Search Location",
+        animation: google.maps.Animation.DROP,
+        icon: searchLocationIcon
+      });
+    };
+    console.log("Setting map for search location marker");
+    meetupapp.searchLocationMarker.setMap(meetupapp.map);
+  };
+
+  meetupapp.showMarker = function (id, show) {
+    meetupapp.markers[id].setMap(
+      show ? meetupapp.map : null);
+  };
+
+  // This function will loop through the markers array and display them all.
+  meetupapp.showMarkers = function () {
+    var bounds = new google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each event and display the marker
+    for (var i = 0; i < meetupapp.markers.length; i++) {
+      meetupapp.markers[i].setMap(meetupapp.map);
+      // bounds.extend(meetupapp.markers[i].position);
+    }
+    // meetupapp.map.fitBounds(bounds);
+  };
+
+  // This function populates the infowindow when the marker is clicked. We'll only allow
+  // one infowindow which will open at the marker that is clicked, and populate based
+  // on that markers position.
+  meetupapp.populateInfoWindow = function (marker, event, infowindow) {
+
+    function toggleBounce(marker) {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+    }
+
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker != marker) {
+      infowindow.close();
+      infowindow.marker = marker;
+      // Make sure the marker property is cleared if the infowindow is closed.
+      infowindow.addListener('closeclick', function () {
+        infowindow.marker = null;
+      });
+      toggleBounce(marker);
+      // Open the infowindow on the correct marker.
+      setTimeout(function () {
+        toggleBounce(marker);
+        var date = new Date(event.time);
+        infowindow.setContent(
+          '<img class="logo-image" src="' + event.group_photo + '">' +
+          '<div>Group: ' + event.groupName + '</div>' +
+          '<div>Event: ' + event.name + '</div>' +
+          '<div>Date: ' + date.toLocaleDateString() + '</div>' +
+          '<div>Time: ' + date.toLocaleTimeString() + '</div>' +
+          '<div>RSVP Yes: ' + event.yes_rsvp_count + '</div>' +
+          '<div>Venue: ' + event.venueName + '</div>' +
+          '<div>Address: ' + event.venueAddress + '</div>' +
+          '<a target="_blank" href="' + event.event_url + '">Event page on Meetup.com</a>'
+        );
+        infowindow.open(map, marker);
+      }, 700);
+    }
+  };
+
   meetupapp.initMap = function () {
-
-    // Style the markers a bit. This will be our listing marker icon.
-    var defaultIcon = meetupapp.makeMarkerIcon('0091ff');
-    // Create a "highlighted location" marker color for when the user
-    // mouses over the marker.
-    var highlightedIcon = meetupapp.makeMarkerIcon('FFFF24');
-
     meetupapp.largeInfowindow = new google.maps.InfoWindow();
-
     // Constructor creates a new map - only center and zoom are required.
+    var position = {
+      lat: meetupapp.sfLat,
+      lng: meetupapp.sfLng
+    };
     meetupapp.map = new google.maps.Map(document.getElementById('map'), {
-      center: {
-        lat: meetupapp.lat,
-        lng: meetupapp.lng
-      },
+      center: position,
       zoom: meetupapp.zoom,
-      styles: meetupapp.styles,
+      styles: styles,
       mapTypeControl: false
     });
+  };
 
-    // Use a signed query (signed with both my Meetup API key and Meetup's key)
-    // to request event data. This keeps my Meetup API key private, to prevent
-    // someone from accessing my personal Meetup groups and act on my behalf.
-    var signedEventQueryWeek = "https://api.meetup.com/2/open_events?callback=?&and_text=False&offset=0&format=json&lon=-122.44&limited_events=False&photo-host=public&page=100&time=%2C1w&radius=4&fields=group_photo%2Ccategory&lat=37.77&order=trending&desc=true&status=upcoming&sig_id=14614002&sig=9bd9af758d34841542fe3e8ad86618c963fdfa10";
-    meetupapp.events = [];
+  meetupapp.initMarkers = function () {
     meetupapp.markers = [];
-
-    $.getJSON(signedEventQueryWeek, function (json) {
-
-      console.log(json);
-
-      // Use the json results to create arrays of events and markers on initialize.
-      for (var i = 0; i < json.results.length; i++) {
-
-        // Only save events that have a designated venue address.
-        var data = json.results[i];
-        if (data.venue) {
-          var event = {
-            name: data.name,
-            groupName: data.group.name,
-            group_photo:
-              (data.group.group_photo) ? data.group.group_photo.thumb_link : "https://a248.e.akamai.net/secure.meetupstatic.com/photos/event/8/f/1/d/highres_454596637.jpeg",
-            time: data.time,
-            yes_rsvp_count: data.yes_rsvp_count,
-            venueName: data.venue.name,
-            venueAddress: data.venue.address_1,
-            venueLat: data.venue.lat,
-            venueLng: data.venue.lon,
-            event_url: data.event_url
-          };
-
-          // Create a marker for the event.
-          var marker = meetupapp.createMarker(event, meetupapp.events.length);
-
-          // Push the marker, event data and categories to our arrays.
-          meetupapp.events.push(event);
-          meetupapp.markers.push(marker);
-          if (data.group.category.name) {
-            console.log(data.group.category.name);
-          };
-        };
-
-      };
-
-      meetupapp.showListings();
-    });
-
-  }
+    for (var i = 0; i < meetupapp.events.length; i++) {
+      // Create a marker for the event.
+      var marker = meetupapp.createMarker(meetupapp.events[i], i);
+      meetupapp.markers.push(marker);
+    };
+  };
 
 })(jQuery);
