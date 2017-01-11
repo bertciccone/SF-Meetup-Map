@@ -11,12 +11,8 @@ var meetupapp = meetupapp || {};
     this.visible = ko.observable(visible);
   };
 
-  var CategoryListItem = function (data) {
-    this.name = ko.observable(data);
-  };
-
   meetupapp.setLocationFilterCoords = function (location) {
-    console.log("Setting location filter coordinates to: ", location);
+    // console.log("Setting location filter coordinates to: ", location);
     meetupapp.locationFilterCoords = location;
     meetupapp.setLocationFilterMarker(location);
   }
@@ -63,7 +59,7 @@ var meetupapp = meetupapp || {};
     self.eventFilters = {
       dateFilter: ko.observable(meetupapp.dateFilter),
       rangeFilter: ko.observable(meetupapp.rangeFilter),
-      locationFilter: ko.observable(meetupapp.locationFilter),
+      locationFilter: ko.observable(meetupapp.locationFilter)
     };
 
     self.applyDateFilter = function (event) {
@@ -82,20 +78,39 @@ var meetupapp = meetupapp || {};
       var x = (λ2 - λ1) * Math.cos((φ1 + φ2) / 2);
       var y = (φ2 - φ1);
       var d = Math.sqrt(x * x + y * y) * R; // meters
-      console.log("Calculated range: ", d * 0.000621371);
+      // console.log("Calculated range: ", d * 0.000621371);
       return (d * 0.000621371) < self.eventFilters.rangeFilter();
     };
 
+    self.applyCategoryFilter = function (event) {
+      var pass = false;
+      var selectionFound = false;
+      // console.log("Category filter for: ", event);
+      for (var i = 0; i < self.categoryList.length; i++) {
+        var category = self.categoryList[i];
+        if (category.selected()) {
+          selectionFound = true;
+          if (category.name == event.groupCategory.toLowerCase()) {
+            // console.log("Equal categories: ", category.name, event.groupCategory.toLowerCase());
+            pass = true;
+            break;
+          };
+        };
+      };
+      return (pass || !selectionFound);
+    };
+
     self.applyEventFilters = function () {
-      console.log("Date filter: ", self.eventFilters.dateFilter(), "Range filter: ", self.eventFilters.rangeFilter(), "Location filter: ", self.eventFilters.locationFilter());
+      // console.log("Date filter: ", self.eventFilters.dateFilter(), "Range filter: ", self.eventFilters.rangeFilter(), "Location filter: ", self.eventFilters.locationFilter());
       meetupapp.events.forEach(function (event, index) {
         var dateFilterPass = self.applyDateFilter(event);
         var rangeFilterPass = self.applyRangeFilter(event);
-        var show = dateFilterPass && rangeFilterPass;
+        var categoryFilterPass = self.applyCategoryFilter(event);
+        var show = dateFilterPass && rangeFilterPass && categoryFilterPass;
         self.eventList()[index].visible(show);
         meetupapp.showMarker(event.id, show);
       });
-      console.log("Exit applyEventFilters");
+      // console.log("Exit applyEventFilters");
     };
 
     self.geocodeLocationFilter = function () {
@@ -125,19 +140,35 @@ var meetupapp = meetupapp || {};
           }
         });
       } else {
-        console.log("Address: ", address);
+        // console.log("Address: ", address);
         meetupapp.setLocationFilterCoords(meetupapp.sfCoords);
         self.applyEventFilters();
       };
     };
 
+    self.createCategoryList = function (categories) {
+      var categoryList = [{
+        name: categories[0],
+        selected: ko.observable(false)
+      }];
+      for (var i = 1; i < categories.length; i++) {
+        if (categories[i] !== categoryList[categoryList.length - 1].name) {
+          categoryList.push({
+            name: categories[i],
+            selected: ko.observable(false)
+          });
+        };
+      };
+      return categoryList;
+    };
+
     // Setup the category filter list.
-    self.categoryList = ko.observableArray([]);
-    meetupapp.categories.forEach(function (element) {
-      self.categoryList.push(new CategoryListItem(element));
-    });
-    self.selectCategoryListItem = function (data, event) {
-      console.log("selectCategoryListItem: ", data, event);
+    self.categoryList = self.createCategoryList(meetupapp.categories);
+
+    self.toggleCategoryListItem = function (data) {
+      data.selected(!data.selected());
+      console.log("toggleCategoryListItem: ", data.selected());
+      self.applyEventFilters();
     };
 
     // Setup the sidebar event selection list.
@@ -151,7 +182,7 @@ var meetupapp = meetupapp || {};
     });
 
     self.selectEventListItem = function (data, event) {
-      console.log("selectEventListItem: ", data.name(), data.id());
+      // console.log("selectEventListItem: ", data.name(), data.id());
       meetupapp.populateInfoWindow(meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
     };
 
@@ -162,9 +193,9 @@ var meetupapp = meetupapp || {};
 
   var jqxhr = meetupapp.initEvents()
     .done(function () {
-      console.log("Event initialization success.");
-      console.log(meetupapp.categories);
-      meetupapp.setLocationFilterCoords(meetupapp.sfCoords);
+      // console.log("Event initialization success.");
+      // console.log(meetupapp.categories);
+      meetupapp.setLocationFilterMarker(meetupapp.locationFilterCoords);
       meetupapp.initMarkers();
       ko.applyBindings(new ViewModel());
     })

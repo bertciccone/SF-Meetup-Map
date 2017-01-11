@@ -69,7 +69,7 @@
         <div id="categories-col" class="col-xs-12 col-md-9">
           <h4 id="category" class="h4-list">Categories</h4>
           <div data-bind="foreach: categoryList">
-            <span data-bind="text: name, click: $parent.selectCategoryListItem" class="categoryListItem"></span>
+            <span data-bind="text: name, click: $parent.toggleCategoryListItem" class="categoryListItem"></span>
           </div>
         </div>
 
@@ -175,12 +175,23 @@
       }
 
       .eventListItem {
-        background: rgba(158, 228, 147, 1);
+        /*background: rgba(158, 228, 147, 1);*/
+      }
+
+      #category {
+        text-align: center;
+      }
+
+      #categories-col {
+        text-align: center;
       }
 
       .categoryListItem {
-        background: rgba(134, 187, 216, 1);
         margin-right: 5px;
+      }
+
+      .categorySelected {
+        background: rgba(134, 187, 216, 1);
       }
 
       #locationFilter {

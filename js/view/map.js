@@ -195,6 +195,7 @@ var meetupapp = meetupapp || {};
           '<div>RSVP Yes: ' + event.yes_rsvp_count + '</div>' +
           '<div>Venue: ' + event.venueName + '</div>' +
           '<div>Address: ' + event.venueAddress + '</div>' +
+          '<div>Category: ' + event.groupCategory + '</div>' +
           '<a target="_blank" href="' + event.event_url + '">Event page on Meetup.com</a>'
         );
         infowindow.open(map, marker);
@@ -212,6 +213,10 @@ var meetupapp = meetupapp || {};
       styles: styles,
       mapTypeControl: false
     });
+    var autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('locationFilter'));
+    // Bias the boundaries within the map for the zoom to area text.
+    autocomplete.bindTo('bounds', meetupapp.map);
   };
 
   meetupapp.initMarkers = function () {

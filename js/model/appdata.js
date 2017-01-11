@@ -7,7 +7,7 @@ var meetupapp = meetupapp || {};
   meetupapp.sfCoords = {
     lat: 37.76,
     lng: -122.44
-  }
+  };
   meetupapp.zoom = 13;
   meetupapp.queryTime = Date.now();
   meetupapp.dateFilter = 3;
@@ -17,15 +17,15 @@ var meetupapp = meetupapp || {};
 
   meetupapp.initEvents = function () {
 
-    function uniqueSortedArray(array) {
-      array.sort();
-      var uniqueSorted = [array[0]];
-      for (var i = 1; i < array.length; i++) {
-        if (array[i] !== uniqueSorted[uniqueSorted.length - 1]) {
-          uniqueSorted.push(array[i]);
+    function findUniqueCategories(categories) {
+      categories.sort();
+      var uniqueCategories = [categories[0]];
+      for (var i = 1; i < categories.length; i++) {
+        if (categories[i] !== uniqueCategories[uniqueCategories.length - 1]) {
+          uniqueCategories.push(categories[i]);
         }
       }
-      return uniqueSorted;
+      return uniqueCategories;
     }
 
     // Use a signed query (signed with both my Meetup API key and Meetup's key)
@@ -70,7 +70,7 @@ var meetupapp = meetupapp || {};
         };
 
       };
-      meetupapp.categories = uniqueSortedArray(categories);
+      meetupapp.categories = findUniqueCategories(categories);
     });
     return jqxhr;
   };
