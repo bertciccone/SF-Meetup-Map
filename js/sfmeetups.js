@@ -5,10 +5,10 @@ var meetupapp = meetupapp || {};
 (function () {
   'use strict';
 
-  var EventListItem = function (name, id, visible) {
+  var EventListItem = function (name, id) {
     this.name = ko.observable(name);
     this.id = ko.observable(id);
-    this.visible = ko.observable(visible);
+    this.visible = ko.observable(false);
   };
 
   meetupapp.setLocationFilterCoords = function (location) {
@@ -178,12 +178,13 @@ var meetupapp = meetupapp || {};
       var name = event.name.length <= 35 ?
         event.name :
         event.name.substr(0, 32) + "...";
-      self.eventList.push(new EventListItem(name, event.id, false));
+      self.eventList.push(new EventListItem(name, event.id));
     });
 
     self.selectEventListItem = function (data, event) {
       // console.log("selectEventListItem: ", data.name(), data.id());
-      meetupapp.populateInfoWindow(meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
+      meetupapp.populateInfoWindow(
+        meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
     };
 
     self.applyEventFilters();
