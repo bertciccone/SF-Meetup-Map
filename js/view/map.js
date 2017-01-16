@@ -79,7 +79,7 @@ var meetupapp = meetupapp || {};
   // This function takes in a COLOR, and then creates a new marker
   // icon of that color. The icon will be 21 px wide by 34 high, have an origin
   // of 0, 0 and be anchored at 10, 34).
-  meetupapp.makeMarkerIcon = function (markerColor) {
+  function makeMarkerIcon(markerColor) {
     var markerImage = new google.maps.MarkerImage(
       'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
       '|40|_|%E2%80%A2',
@@ -90,48 +90,13 @@ var meetupapp = meetupapp || {};
     return markerImage;
   };
 
-  meetupapp.createMarker = function (event, id) {
-
-    // Style the markers a bit. This will be our listing marker icon.
-    var defaultIcon = meetupapp.makeMarkerIcon('0091ff');
-    // Create a "highlighted location" marker color for when the user
-    // mouses over the marker.
-    var highlightedIcon = meetupapp.makeMarkerIcon('FFFF24');
-
-    var position = new google.maps.LatLng(event.venueCoords);
-    var marker = new google.maps.Marker({
-      position,
-      title: event.name,
-      animation: google.maps.Animation.DROP,
-      icon: defaultIcon,
-      id: id
-    });
-
-    // Create an onclick event to open the large infowindow at each marker.
-    marker.addListener('click', function () {
-      var self = this;
-      meetupapp.populateInfoWindow(self, meetupapp.events[self.id], meetupapp.largeInfowindow);
-    });
-
-    // Two event listeners - one for mouseover, one for mouseout,
-    // to change the colors back and forth.
-    marker.addListener('mouseover', function () {
-      this.setIcon(highlightedIcon);
-    });
-    marker.addListener('mouseout', function () {
-      this.setIcon(defaultIcon);
-    });
-
-    return marker;
-  };
-
   meetupapp.setLocationFilterMarker = function (location) {
     var position = new google.maps.LatLng(location);
     if (meetupapp.locationFilterMarker) {
       meetupapp.locationFilterMarker.setMap(null);
       meetupapp.locationFilterMarker.position = position;
     } else {
-      var locationFilterIcon = meetupapp.makeMarkerIcon('f00');
+      var locationFilterIcon = makeMarkerIcon('f00');
       console.log("Setting location filter marker", location);
       meetupapp.locationFilterMarker = new google.maps.Marker({
         position,
@@ -147,17 +112,6 @@ var meetupapp = meetupapp || {};
   meetupapp.showMarker = function (id, show) {
     meetupapp.markers[id].setMap(
       show ? meetupapp.map : null);
-  };
-
-  // This function will loop through the markers array and display them all.
-  meetupapp.showMarkers = function () {
-    var bounds = new google.maps.LatLngBounds();
-    // Extend the boundaries of the map for each event and display the marker
-    for (var i = 0; i < meetupapp.markers.length; i++) {
-      meetupapp.markers[i].setMap(meetupapp.map);
-      // bounds.extend(meetupapp.markers[i].position);
-    }
-    // meetupapp.map.fitBounds(bounds);
   };
 
   // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -199,7 +153,7 @@ var meetupapp = meetupapp || {};
           '<a target="_blank" href="' + event.event_url + '">Event page on Meetup.com</a>'
         );
         infowindow.open(map, marker);
-      }, 700);
+      }, 750);
     }
   };
 
@@ -217,13 +171,51 @@ var meetupapp = meetupapp || {};
       document.getElementById('locationFilter'));
     // Bias the boundaries within the map for the zoom to area text.
     autocomplete.bindTo('bounds', meetupapp.map);
+    // if (!meetupapp.map) {
+    //   alert("Problem downloading Google map.");
+    // }
   };
 
   meetupapp.initMarkers = function () {
+
+    function createMarker(event, id) {
+
+      // Style the markers a bit. This will be our listing marker icon.
+      var defaultIcon = makeMarkerIcon('0091ff');
+      // Create a "highlighted location" marker color for when the user
+      // mouses over the marker.
+      var highlightedIcon = makeMarkerIcon('FFFF24');
+      var position = new google.maps.LatLng(event.venueCoords);
+      var marker = new google.maps.Marker({
+        position,
+        title: event.name,
+        animation: google.maps.Animation.DROP,
+        icon: defaultIcon,
+        id: id
+      });
+
+      // Create an onclick event to open the large infowindow at each marker.
+      marker.addListener('click', function () {
+        var self = this;
+        meetupapp.populateInfoWindow(self, meetupapp.events[self.id], meetupapp.largeInfowindow);
+      });
+
+      // Two event listeners - one for mouseover, one for mouseout,
+      // to change the colors back and forth.
+      marker.addListener('mouseover', function () {
+        this.setIcon(highlightedIcon);
+      });
+      marker.addListener('mouseout', function () {
+        this.setIcon(defaultIcon);
+      });
+
+      return marker;
+    };
+
     meetupapp.markers = [];
     for (var i = 0; i < meetupapp.events.length; i++) {
       // Create a marker for the event.
-      var marker = meetupapp.createMarker(meetupapp.events[i], i);
+      var marker = createMarker(meetupapp.events[i], i);
       meetupapp.markers.push(marker);
     };
   };

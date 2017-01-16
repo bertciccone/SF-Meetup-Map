@@ -5,21 +5,15 @@ var meetupapp = meetupapp || {};
 (function () {
   'use strict';
 
-  var EventListItem = function (name, id) {
-    this.name = ko.observable(name);
-    this.id = ko.observable(id);
-    this.visible = ko.observable(false);
-  };
-
-  meetupapp.setLocationFilterCoords = function (location) {
-    // console.log("Setting location filter coordinates to: ", location);
-    meetupapp.locationFilterCoords = location;
-    meetupapp.setLocationFilterMarker(location);
-  }
-
   var ViewModel = function () {
 
     var self = this;
+
+    var EventListItem = function (name, id) {
+      this.name = ko.observable(name);
+      this.id = ko.observable(id);
+      this.visible = ko.observable(false);
+    };
 
     // Setup the filter options.
     self.dateFilterOptions = [{
@@ -62,50 +56,72 @@ var meetupapp = meetupapp || {};
       locationFilter: ko.observable(meetupapp.locationFilter)
     };
 
-    self.applyDateFilter = function (event) {
-      return event.time <= meetupapp.queryTime +
-        (self.eventFilters.dateFilter() * 24 * 60 * 60 * 1000);
-    };
-
-    self.applyRangeFilter = function (event) {
-      // Avoid using Google Maps to calculate driving distance to each event destination. Instead, use an approximation for distance "as the bird flies" from http://www.movable-type.co.uk/scripts/latlong.html.
-      var R = 6371e3; // meters
-      var r = Math.PI / 180;
-      var λ1 = meetupapp.locationFilterCoords.lng * r;
-      var λ2 = event.venueCoords.lng * r;
-      var φ1 = meetupapp.locationFilterCoords.lat * r;
-      var φ2 = event.venueCoords.lat * r;
-      var x = (λ2 - λ1) * Math.cos((φ1 + φ2) / 2);
-      var y = (φ2 - φ1);
-      var d = Math.sqrt(x * x + y * y) * R; // meters
-      // console.log("Calculated range: ", d * 0.000621371);
-      return (d * 0.000621371) < self.eventFilters.rangeFilter();
-    };
-
-    self.applyCategoryFilter = function (event) {
-      var pass = false;
-      var selectionFound = false;
-      // console.log("Category filter for: ", event);
-      for (var i = 0; i < self.categoryList.length; i++) {
-        var category = self.categoryList[i];
-        if (category.selected()) {
-          selectionFound = true;
-          if (category.name == event.groupCategory.toLowerCase()) {
-            // console.log("Equal categories: ", category.name, event.groupCategory.toLowerCase());
-            pass = true;
-            break;
-          };
+    function createCategoryList(categories) {
+      var categoryList = [{
+        name: categories[0],
+        selected: ko.observable(false)
+      }];
+      for (var i = 1; i < categories.length; i++) {
+        if (categories[i] !== categoryList[categoryList.length - 1].name) {
+          categoryList.push({
+            name: categories[i],
+            selected: ko.observable(false)
+          });
         };
       };
-      return (pass || !selectionFound);
+      return categoryList;
     };
 
+    function setLocationFilterCoords(location) {
+      // console.log("Setting location filter coordinates to: ", location);
+      meetupapp.locationFilterCoords = location;
+      meetupapp.setLocationFilterMarker(location);
+    }
+
     self.applyEventFilters = function () {
-      // console.log("Date filter: ", self.eventFilters.dateFilter(), "Range filter: ", self.eventFilters.rangeFilter(), "Location filter: ", self.eventFilters.locationFilter());
+
+      function applyDateFilter(event) {
+        return event.time <= meetupapp.queryTime +
+          (self.eventFilters.dateFilter() * 24 * 60 * 60 * 1000);
+      }
+
+      function applyRangeFilter(event) {
+        // Avoid using Google Maps to calculate driving distance to each event destination. Instead, use an approximation for distance "as the bird flies" from http://www.movable-type.co.uk/scripts/latlong.html.
+        var R = 6371e3; // meters
+        var r = Math.PI / 180;
+        var λ1 = meetupapp.locationFilterCoords.lng * r;
+        var λ2 = event.venueCoords.lng * r;
+        var φ1 = meetupapp.locationFilterCoords.lat * r;
+        var φ2 = event.venueCoords.lat * r;
+        var x = (λ2 - λ1) * Math.cos((φ1 + φ2) / 2);
+        var y = (φ2 - φ1);
+        var d = Math.sqrt(x * x + y * y) * R; // meters
+        // console.log("Calculated range: ", d * 0.000621371);
+        return (d * 0.000621371) < self.eventFilters.rangeFilter();
+      }
+
+      function applyCategoryFilter(event) {
+        var pass = false;
+        var selectionFound = false;
+        // console.log("Category filter for: ", event);
+        for (var i = 0; i < self.categoryList.length; i++) {
+          var category = self.categoryList[i];
+          if (category.selected()) {
+            selectionFound = true;
+            if (category.name == event.groupCategory.toLowerCase()) {
+              // console.log("Equal categories: ", category.name, event.groupCategory.toLowerCase());
+              pass = true;
+              break;
+            };
+          };
+        };
+        return (pass || !selectionFound);
+      }
+
       meetupapp.events.forEach(function (event, index) {
-        var dateFilterPass = self.applyDateFilter(event);
-        var rangeFilterPass = self.applyRangeFilter(event);
-        var categoryFilterPass = self.applyCategoryFilter(event);
+        var dateFilterPass = applyDateFilter(event);
+        var rangeFilterPass = applyRangeFilter(event);
+        var categoryFilterPass = applyCategoryFilter(event);
         var show = dateFilterPass && rangeFilterPass && categoryFilterPass;
         self.eventList()[index].visible(show);
         meetupapp.showMarker(event.id, show);
@@ -132,7 +148,7 @@ var meetupapp = meetupapp || {};
               lng: results[0].geometry.location.lng()
             };
             console.log("Location filter coordinates: ", location);
-            meetupapp.setLocationFilterCoords(location);
+            setLocationFilterCoords(location);
             self.applyEventFilters();
           } else {
             window.alert('We could not find that location - try entering a more' +
@@ -141,29 +157,13 @@ var meetupapp = meetupapp || {};
         });
       } else {
         // console.log("Address: ", address);
-        meetupapp.setLocationFilterCoords(meetupapp.sfCoords);
+        setLocationFilterCoords(meetupapp.sfCoords);
         self.applyEventFilters();
       };
     };
 
-    self.createCategoryList = function (categories) {
-      var categoryList = [{
-        name: categories[0],
-        selected: ko.observable(false)
-      }];
-      for (var i = 1; i < categories.length; i++) {
-        if (categories[i] !== categoryList[categoryList.length - 1].name) {
-          categoryList.push({
-            name: categories[i],
-            selected: ko.observable(false)
-          });
-        };
-      };
-      return categoryList;
-    };
-
     // Setup the category filter list.
-    self.categoryList = self.createCategoryList(meetupapp.categories);
+    self.categoryList = createCategoryList(meetupapp.categories);
 
     self.toggleCategoryListItem = function (data) {
       data.selected(!data.selected());
@@ -188,7 +188,8 @@ var meetupapp = meetupapp || {};
     };
 
     self.applyEventFilters();
-  };
+
+  }; // ViewModel
 
   console.log("sfmeetups.js");
 

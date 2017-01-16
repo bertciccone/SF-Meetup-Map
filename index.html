@@ -11,70 +11,53 @@
   <body class="container">
 
     <header class="row">
-      <div class="col-xs-12 col-md-3">
+      <div id="logo-col" class="col-xs-12 col-md-3">
         <img class="logo-image" src="img/highres_454596637.png" alt="Meetup logo">
       </div>
-      <div class="col-xs-12 col-md-9">
-        <h1 class="name-and-title">Find Meetup Events in San Francisco</h1>
-      </div>
-      <div class="col-xs-12">
-        <hr>
+      <div id="app-title-col" class="col-xs-12 col-md-9">
+        <h1 class="app-title">Find Meetup Events in San Francisco</h1>
       </div>
     </header>
 
     <main>
       <div class="row">
 
-        <div id="sidebar-col" class="col-xs-12 col-md-3">
+        <form data-bind="submit: geocodeLocationFilter">
 
-          <form data-bind="submit: geocodeLocationFilter">
-
-            <div class="row">
-              <div id="dates-col" class="col-xs-12 col-md-12">
-                <h4 class="h4-list">Date Range</h4>
-                <div>
-                  <label>Meeting in the next
+          <div id="date-location-col" class="col-xs-12 col-md-3">
+            <h2 class="filter-title">Filters</h2>
+            <div>
+              <label>Find events meeting in the next
                 <select data-bind="options: dateFilterOptions, optionsText: 'name', optionsValue: 'days', value: eventFilters.dateFilter, event: {change: applyEventFilters}">
                 </select>
                 </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div id="location-col" class="col-xs-12 col-md-12">
-                <h4 class="h4-list">Location</h4>
-                <label>Within
+              <label>and within
                     <select data-bind="options: rangeFilterOptions, optionsText: 'name', optionsValue: 'miles', value: eventFilters.rangeFilter, event: {change: applyEventFilters}">
                   </select>
                 of</label>
-                <input id="locationFilter" type="text" placeholder="Address, neighborhood, zip or landmark" data-bind="textInput: eventFilters.locationFilter">
-                <button id="searchButton" name="search" type="submit">Search</button>
-              </div>
-            </div>
-
-          </form>
-
-          <div class="row">
-            <div id="events-col" class="col-xs-12 col-md-12">
-              <h4 class="h4-list">Events</h4>
-              <div data-bind="foreach: eventList">
-                <p data-bind="text: name, click: $parent.selectEventListItem, visible: visible" class="eventListItem"></p>
-              </div>
+              <input id="locationFilter" type="text" placeholder="Address, area, zip or landmark" data-bind="textInput: eventFilters.locationFilter">
+              <button id="searchButton" name="search" type="submit">▶︎</button>
             </div>
           </div>
 
-        </div>
+        </form>
 
         <div id="categories-col" class="col-xs-12 col-md-9">
-          <h4 id="category" class="h4-list">Categories</h4>
+          <h2 class="filter-title">Categories</h2>
           <div data-bind="foreach: categoryList">
             <span data-bind="text: name, click: $parent.toggleCategoryListItem, css: { categorySelected: selected() }" class="categoryListItem"></span>
           </div>
         </div>
 
+        <div id="events-col" class="col-xs-12 col-md-3">
+          <h2 class="events-title">Events</h2>
+          <div data-bind="foreach: eventList">
+            <p data-bind="text: name, click: $parent.selectEventListItem, visible: visible" class="eventListItem"></p>
+          </div>
+        </div>
+
         <div id="map-col" class="col-xs-12 col-md-9">
-          <div id="map">Map</div>
+          <div id="map"></div>
         </div>
 
       </div>
@@ -83,8 +66,7 @@
 
     <!-- Copyright statement for footer -->
     <footer class="row">
-      <div class="col-xs-12">
-        <hr>
+      <div id="footer-col" class="col-xs-12">
         <p class="footer-copyright">All rights reserved &#169; 2017 Bert Ciccone, Map data &#169; 2017 Google, Event data &#169; 2017 Meetup</p>
       </div>
     </footer>
@@ -94,73 +76,81 @@
 
     <!-- Load scripts after loading rest of page -->
     <style>
+      /* */
       /* Global Styles */
+      /* */
+      /* RGB
+        $color1: rgba(51, 102, 153, 1);
+        $color2: rgba(134, 187, 216, 1);
+        $color3: rgba(47, 72, 88, 1);
+        $color4: rgba(158, 228, 147, 1);
+        $color5: rgba(218, 247, 220, 1);
+      */
       /** {
         outline: 1px solid red !important;
       }*/
-      /* RGB
-    $color1: rgba(51, 102, 153, 1);
-    $color2: rgba(134, 187, 216, 1);
-    $color3: rgba(47, 72, 88, 1);
-    $color4: rgba(158, 228, 147, 1);
-    $color5: rgba(218, 247, 220, 1);
-    */
 
       body {
         font-family: "Roboto", sans-serif;
         /*background-color: rgba(218, 247, 220, 1);*/
       }
 
-      h1,
-      h2,
-      h3 {
+      h1 {
+        font-size: 2em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+      /* */
+      /* Header Styles */
+      /* */
+
+      #logo-col,
+      #app-title-col {
+        margin-top: 1em;
+        text-align: center;
+        background-color: rgba(158, 228, 147, 1);
+      }
+
+      .logo-image {
+        width: 4em;
+      }
+
+      .app-title {
+        margin-top: 0.5em;
+        text-align: center;
+        text-transform: uppercase;
         font-weight: 100;
         color: rgba(51, 102, 153, 1);
       }
+      /* */
+      /* Main Content Styles */
+      /* */
 
-      h4 {
-        font-weight: 400;
-        color: rgba(51, 102, 153, 1);
-      }
-
-      h1,
-      h4 {
-        text-transform: uppercase;
-      }
-
-      hr {
-        background-color: rgba(158, 228, 147, 1);
-        height: .2em;
-      }
-
-      header {
+      #events-col {
         margin-top: 1em;
+        height: 60em;
+        text-align: center;
+        overflow-y: auto;
+        background-color: rgba(158, 228, 147, 1);
       }
 
-      li {
-        list-style: none;
-      }
-      /* Header Styles */
-
-      .logo-image {
-        text-align: left;
-        width: 8em;
-      }
-
-      .name-and-title {
+      #date-location-col,
+      #categories-col {
+        height: 10em;
         margin-top: 1em;
         text-align: center;
+        overflow-y: auto;
+        background-color: rgba(158, 228, 147, 1);
       }
-      /* Hero Styles */
 
-      .hero-image {
+      #map-col {
         margin-top: 1em;
-        margin-left: auto;
-        margin-right: auto;
+        height: 60em;
       }
 
       #map {
-        height: 800px;
         top: 0px;
         bottom: 0px;
         left: 0px;
@@ -168,62 +158,54 @@
         position: absolute;
       }
 
-      .topic {
-        display: inline;
-        margin-left: 15px;
-        margin-right: 15px;
+      .events-title,
+      .filter-title {
+        margin-top: 0.5em;
+        font-weight: 100;
+        text-transform: uppercase;
+        text-align: center;
+        color: rgba(51, 102, 153, 1);
+      }
+
+      #locationFilter {
+        width: 85%;
       }
 
       .eventListItem {
         /*background: rgba(158, 228, 147, 1);*/
       }
 
-      #category {
-        text-align: center;
-      }
-
-      #categories-col {
-        text-align: center;
-      }
-
       .categoryListItem {
+        border: none;
+        border-radius: 10px;
         margin-right: 5px;
-      }
-
-      .categorySelected {
         background: rgba(134, 187, 216, 1);
       }
 
-      #locationFilter {
-        width: 100%;
+      .categorySelected {
+        border: none;
+        border-radius: 10px;
+        background: rgba(47, 72, 88, 1);
       }
-      /* Click Styles */
-
-      .h4-list {
-        text-align: left;
-        font-weight: bold;
-      }
-
-      .h3-name {
-        text-align: center;
-        font-weight: bold;
-      }
-
-      .h3-clicks {
-        text-align: center;
-      }
-
-      .h3-menu {
-        text-align: left;
-      }
+      /* */
       /* Footer Styles */
+      /* */
+
+      #footer-col {
+        margin-top: 1em;
+        height: 5em;
+        background-color: rgba(158, 228, 147, 1);
+      }
 
       .footer-copyright {
-        font-weight: 100;
-        color: rgba(134, 187, 216, 1);
+        margin-top: 1em;
         text-align: center;
+        font-weight: 100;
+        color: rgba(51, 102, 153, 1);
       }
+      /* */
       /* Responsive Styles */
+      /* */
 
       @media screen and (max-width: 767px) {
         header {
@@ -232,13 +214,6 @@
         .name-and-title {
           text-align: center;
         }
-        .h4-list {
-          text-align: center;
-        }
-        .h3-menu {
-          display: inline-flex;
-          margin: 10px;
-        }
       }
     </style>
     <script src="js/lib/jquery-3.1.0.min.js"></script>
@@ -246,10 +221,10 @@
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/model/appdata.js"></script>
     <script src="js/view/map.js"></script>
-    <script src="js/view/mapfilters.js"></script>
-    <script src="js/view/mapneighborhoods.js"></script>
     <script src="js/sfmeetups.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.initMap"></script>
   </body>
+
+</html>
 
 </html>
