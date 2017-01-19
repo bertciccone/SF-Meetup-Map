@@ -161,19 +161,16 @@ var meetupapp = meetupapp || {};
     meetupapp.largeInfowindow = new google.maps.InfoWindow();
     // Constructor creates a new map - only center and zoom are required.
     var position = new google.maps.LatLng(meetupapp.sfCoords);
-    meetupapp.map = new google.maps.Map(document.getElementById('map'), {
+    meetupapp.map = new google.maps.Map($('#map').get(0), {
       center: position,
       zoom: meetupapp.zoom,
       styles: styles,
       mapTypeControl: false
     });
     var autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById('locationFilter'));
+      $('#locationFilter').get(0));
     // Bias the boundaries within the map for the zoom to area text.
-    autocomplete.bindTo('bounds', meetupapp.map);
-    // if (!meetupapp.map) {
-    //   alert("Problem downloading Google map.");
-    // }
+    // autocomplete.bindTo('bounds', meetupapp.map);
   };
 
   meetupapp.initMarkers = function () {

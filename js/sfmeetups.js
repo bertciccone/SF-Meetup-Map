@@ -175,10 +175,7 @@ var meetupapp = meetupapp || {};
     self.eventList = ko.observableArray([]);
 
     meetupapp.events.forEach(function (event) {
-      var name = event.name.length <= 35 ?
-        event.name :
-        event.name.substr(0, 32) + "...";
-      self.eventList.push(new EventListItem(name, event.id));
+      self.eventList.push(new EventListItem(event.name, event.id));
     });
 
     self.selectEventListItem = function (data, event) {

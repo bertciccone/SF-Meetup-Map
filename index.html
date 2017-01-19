@@ -8,39 +8,113 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
   </head>
 
-  <body class="container">
+  <body>
 
-    <header class="row">
-      <div id="logo-col" class="col-xs-12 col-md-3">
-        <img class="logo-image" src="img/highres_454596637.png" alt="Meetup logo">
-      </div>
-      <div id="app-title-col" class="col-xs-12 col-md-9">
-        <h1 class="app-title">Find Meetup Events in San Francisco</h1>
-      </div>
-    </header>
+    <div class="container">
 
-    <main>
-      <div class="row">
+      <header class="row">
+        <div id="app-title-col" class="col-xs-12">
+          <span id="hamburger">&#9776</span>
+          <img class="logo-image" src="img/highres_454596637.png" alt="Meetup logo">
+          <h1 class="app-title">San Francisco Meetups</h1>
+        </div>
+      </header>
 
-        <form data-bind="submit: geocodeLocationFilter">
+      <main>
 
-          <div id="date-location-col" class="col-xs-12 col-md-3">
-            <h2 class="filter-title">Filters</h2>
-            <div>
-              <label>Find events meeting in the next
+        <div class="row">
+          <div id="menu-panel" class="panel-background">
+
+            <div class="container">
+
+              <div class="row">
+                <div class="panel-group col-xs-12" id="accordion" role="tablist" aria-multiselectable="false">
+
+                  <div class="panel panel-default col-xs-12 col-md-4 first-panel">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                      <h2 class="panel-title">
+                <h2 class="collapsed filter-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                  Date/Location
+                </h2>
+                      </h2>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                      <div class="panel-body">
+                        <div class="date-location-col date-location-text">
+                          <p>Find events meeting in the next
+                            <select data-bind="options: dateFilterOptions, optionsText: 'name', optionsValue: 'days', value: eventFilters.dateFilter, event: {change: applyEventFilters}">
+                          </select>
+                          </p>
+                          <p>and within
+                            <select data-bind="options: rangeFilterOptions, optionsText: 'name', optionsValue: 'miles', value: eventFilters.rangeFilter, event: {change: applyEventFilters}">
+                            </select> of
+                          </p>
+                          <form data-bind="submit: geocodeLocationFilter">
+                            <input id="locationFilter" type="text" placeholder="Address, area or landmark" data-bind="textInput: eventFilters.locationFilter">
+                            <button id="searchButton" name="search" type="submit">▶︎</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="panel panel-default col-xs-12 col-md-4">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                      <h2 class="panel-title">
+                <h2 class="collapsed filter-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Categories
+                </h2>
+                      </h2>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                      <div class="panel-body">
+                        <div class="categories-col" data-bind="foreach: categoryList">
+                          <span data-bind="text: name, click: $parent.toggleCategoryListItem, css: { categorySelected: selected() }" class="categoryListItem"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="panel panel-default col-xs-12 col-md-4">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                      <h2 class="panel-title">
+                <h2 class="collapsed filter-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Events
+                </h2>
+                      </h2>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                      <div class="panel-body">
+                        <div class="events-col" data-bind="foreach: eventList">
+                          <p data-bind="text: name, click: $parent.selectEventListItem, visible: visible" class="eventListItem"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div id="date-location-col" class="col-xs-12 col-md-3">
+          <h2 class="filter-title">Date and Location</h2>
+          <div>
+            <label>Find events meeting in the next
                 <select data-bind="options: dateFilterOptions, optionsText: 'name', optionsValue: 'days', value: eventFilters.dateFilter, event: {change: applyEventFilters}">
                 </select>
                 </label>
-              <label>and within
+            <label>and within
                     <select data-bind="options: rangeFilterOptions, optionsText: 'name', optionsValue: 'miles', value: eventFilters.rangeFilter, event: {change: applyEventFilters}">
                   </select>
                 of</label>
-              <input id="locationFilter" type="text" placeholder="Address, area, zip or landmark" data-bind="textInput: eventFilters.locationFilter">
+            <form data-bind="submit: geocodeLocationFilter">
+              <input id="locationFilter" type="text" placeholder="Address, area or landmark" data-bind="textInput: eventFilters.locationFilter">
               <button id="searchButton" name="search" type="submit">▶︎</button>
-            </div>
+            </form>
           </div>
-
-        </form>
+        </div>
 
         <div id="categories-col" class="col-xs-12 col-md-9">
           <h2 class="filter-title">Categories</h2>
@@ -54,22 +128,24 @@
           <div data-bind="foreach: eventList">
             <p data-bind="text: name, click: $parent.selectEventListItem, visible: visible" class="eventListItem"></p>
           </div>
+        </div> -->
+
+        <div class="row">
+          <div id="map-col" class="col-xs-12">
+            <div id="map"></div>
+          </div>
         </div>
 
-        <div id="map-col" class="col-xs-12 col-md-9">
-          <div id="map"></div>
+      </main>
+
+      <!-- Copyright statement for footer -->
+      <footer class="row">
+        <div id="footer-col" class="col-xs-12">
+          <p class="footer-copyright">All rights reserved &#169; 2017 Bert Ciccone, Map data &#169; 2017 Google, Event data &#169; 2017 Meetup</p>
         </div>
+      </footer>
 
-      </div>
-
-    </main>
-
-    <!-- Copyright statement for footer -->
-    <footer class="row">
-      <div id="footer-col" class="col-xs-12">
-        <p class="footer-copyright">All rights reserved &#169; 2017 Bert Ciccone, Map data &#169; 2017 Google, Event data &#169; 2017 Meetup</p>
-      </div>
-    </footer>
+    </div>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
@@ -86,9 +162,10 @@
         $color4: rgba(158, 228, 147, 1);
         $color5: rgba(218, 247, 220, 1);
       */
-      /** {
+
+      * {
         outline: 1px solid red !important;
-      }*/
+      }
 
       body {
         font-family: "Roboto", sans-serif;
@@ -96,25 +173,34 @@
       }
 
       h1 {
-        font-size: 2em;
+        font-size: 1.5em;
       }
 
       h2 {
-        font-size: 1.5em;
+        font-size: 1.2em;
+        margin-bottom: 0px;
       }
       /* */
       /* Header Styles */
       /* */
 
-      #logo-col,
+      .row {
+        background-color: transparent;
+      }
+
       #app-title-col {
-        margin-top: 1em;
+        margin-top: 0.5em;
         text-align: center;
-        background-color: rgba(158, 228, 147, 1);
+        background-color: #19a0d8;
+      }
+
+      #hamburger {
+        display: none;
       }
 
       .logo-image {
-        width: 4em;
+        width: 3em;
+        float: left;
       }
 
       .app-title {
@@ -122,32 +208,86 @@
         text-align: center;
         text-transform: uppercase;
         font-weight: 100;
-        color: rgba(51, 102, 153, 1);
+        color: white;
       }
       /* */
       /* Main Content Styles */
       /* */
 
-      #events-col {
-        margin-top: 1em;
-        height: 60em;
-        text-align: center;
-        overflow-y: auto;
-        background-color: rgba(158, 228, 147, 1);
+      .panel-background {
+        position: absolute;
+        z-index: 1;
       }
 
-      #date-location-col,
-      #categories-col {
-        height: 10em;
-        margin-top: 1em;
+      .first-panel {
+        margin-top: 5px;
+      }
+
+      .panel {
+        background: transparent;
+        border-color: transparent;
+      }
+
+      .panel-heading,
+      .panel-collapse {
+        background-color: rgba(134, 187, 216, 1) !important;
+        opacity: 0.8;
+      }
+
+      .date-location-col,
+      .categories-col {
         text-align: center;
         overflow-y: auto;
-        background-color: rgba(158, 228, 147, 1);
+      }
+
+      .events-col {
+        height: 40em;
+        text-align: center;
+        overflow-y: auto;
+      }
+
+      .filter-title {
+        margin-top: 0.5em;
+        font-weight: 400;
+        text-transform: uppercase;
+        text-align: center;
+        color: rgba(47, 72, 88, 1);
+      }
+
+      #locationFilter {
+        width: 85%;
+      }
+
+      label {
+        font-size: 1em;
+      }
+
+      .categoryListItem {
+        font-size: 1.2em;
+        border: none;
+        border-radius: 10px;
+        padding: 2px 4px 2px 4px;
+        margin-right: 0 5px 3px 0;
+        color: rgba(47, 72, 88, 1);
+      }
+
+      .categorySelected {
+        border: none;
+        border-radius: 4px;
+        color: white;
+        background: rgba(51, 102, 153, 1);
+      }
+
+      .date-location-text,
+      .eventListItem {
+        font-size: 1.2em;
+        color: rgba(47, 72, 88, 1);
       }
 
       #map-col {
-        margin-top: 1em;
+        margin-top: 0.5em;
         height: 60em;
+        width: 100%;
       }
 
       #map {
@@ -157,62 +297,57 @@
         right: 0px;
         position: absolute;
       }
-
-      .events-title,
-      .filter-title {
-        margin-top: 0.5em;
-        font-weight: 100;
-        text-transform: uppercase;
-        text-align: center;
-        color: rgba(51, 102, 153, 1);
-      }
-
-      #locationFilter {
-        width: 85%;
-      }
-
-      .eventListItem {
-        /*background: rgba(158, 228, 147, 1);*/
-      }
-
-      .categoryListItem {
-        border: none;
-        border-radius: 10px;
-        margin-right: 5px;
-        background: rgba(134, 187, 216, 1);
-      }
-
-      .categorySelected {
-        border: none;
-        border-radius: 10px;
-        background: rgba(47, 72, 88, 1);
-      }
       /* */
       /* Footer Styles */
       /* */
 
       #footer-col {
-        margin-top: 1em;
-        height: 5em;
-        background-color: rgba(158, 228, 147, 1);
+        margin-top: 0.5em;
+        height: 4em;
+        background-color: #19a0d8;
       }
 
       .footer-copyright {
-        margin-top: 1em;
+        margin-top: 0.5em;
         text-align: center;
-        font-weight: 100;
-        color: rgba(51, 102, 153, 1);
+        font-weight: 300;
+        /*color: rgba(51, 102, 153, 1);*/
+        color: white;
       }
       /* */
       /* Responsive Styles */
       /* */
 
-      @media screen and (max-width: 767px) {
-        header {
-          text-align: center;
+      @media screen and (max-width: 991px) {
+        #hamburger {
+          display: block;
+          margin-top: 0.5em;
+          float: right;
+          font-size: 1.5em;
         }
-        .name-and-title {
-          text-align: center;
+        .panel-background {
+          position: absolute;
+          z-index: 1;
+          left: -1000px;
+          /*-webkit-transform: translate(-1000px, 0);
+          -ms-transform: translate(-1000px, 0);
+          transform: translate(-1000px, 0);*/
+          transition: 0.1s ease;
+        }
+        .events-col {
+          height: 30em;
+        }
+        #map-col {
+          height: 46em;
+        }
+      }
+
+      @media screen and (max-width: 767px) {
+        .events-col {
+          height: 17em;
+        }
+        #map-col {
+          height: 30em;
         }
       }
     </style>
@@ -223,8 +358,22 @@
     <script src="js/view/map.js"></script>
     <script src="js/sfmeetups.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.initMap"></script>
+    <script>
+      $("#hamburger").get(0).addEventListener("click", function(event) {
+        if ($(".slider-in").get(0)) {
+          $("#menu-panel").animate({
+            "position": "absolute",
+            "left": "-=1000px"
+          });
+        } else {
+          $("#menu-panel").animate({
+            "position": "absolute",
+            "left": "+=1000px"
+          });
+        }
+        $("#menu-panel").toggleClass("slider-in");
+      }, false);
+    </script>
   </body>
-
-</html>
 
 </html>
