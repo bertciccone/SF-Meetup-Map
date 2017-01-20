@@ -130,10 +130,9 @@
         $color4: rgba(158, 228, 147, 1);
         $color5: rgba(218, 247, 220, 1);
       */
-
-      * {
+      /** {
         outline: 1px solid red !important;
-      }
+      }*/
 
       body {
         font-family: "Roboto", sans-serif;
@@ -297,9 +296,6 @@
           position: absolute;
           z-index: 1;
           left: -1000px;
-          /*-webkit-transform: translate(-1000px, 0);
-          -ms-transform: translate(-1000px, 0);
-          transform: translate(-1000px, 0);*/
           transition: 0.1s ease;
         }
         .events-col {
@@ -336,7 +332,7 @@
         } else {
           $("#menu-panel").animate({
             "position": "absolute",
-            "left": "+=1000px"
+            "left": $("#app-title-col").position().left
           });
         }
         $("#menu-panel").toggleClass("slider-in");
