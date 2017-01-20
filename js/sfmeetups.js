@@ -193,8 +193,8 @@ var meetupapp = meetupapp || {};
 
   var jqxhr = meetupapp.initEvents()
     .done(function () {
-      // console.log("Event initialization success.");
-      // console.log(meetupapp.categories);
+      console.log("Event initialization success.");
+      console.log(meetupapp.categories);
       meetupapp.setLocationFilterMarker(meetupapp.locationFilterCoords);
       meetupapp.initMarkers();
       ko.applyBindings(new ViewModel());
