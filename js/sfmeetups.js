@@ -180,6 +180,7 @@ var meetupapp = meetupapp || {};
 
     self.selectEventListItem = function (data, event) {
       // console.log("selectEventListItem: ", data.name(), data.id());
+      meetupapp.resetMenus();
       meetupapp.populateInfoWindow(
         meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
     };

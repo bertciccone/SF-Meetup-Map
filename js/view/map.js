@@ -161,16 +161,18 @@ var meetupapp = meetupapp || {};
     meetupapp.largeInfowindow = new google.maps.InfoWindow();
     // Constructor creates a new map - only center and zoom are required.
     var position = new google.maps.LatLng(meetupapp.sfCoords);
+    var wideWindow = $(window).width() > 767;
+    var zoom = wideWindow ? meetupapp.zoomIn : meetupapp.zoomOut;
     meetupapp.map = new google.maps.Map($('#map').get(0), {
       center: position,
-      zoom: meetupapp.zoom,
+      zoom: zoom,
       styles: styles,
       mapTypeControl: false
     });
     var autocomplete = new google.maps.places.Autocomplete(
       $('#locationFilter').get(0));
     // Bias the boundaries within the map for the zoom to area text.
-    // autocomplete.bindTo('bounds', meetupapp.map);
+    autocomplete.bindTo('bounds', meetupapp.map);
   };
 
   meetupapp.initMarkers = function () {
@@ -214,6 +216,21 @@ var meetupapp = meetupapp || {};
       // Create a marker for the event.
       var marker = createMarker(meetupapp.events[i], i);
       meetupapp.markers.push(marker);
+    };
+  };
+
+  meetupapp.resetMenus = function () {
+    console.log("Classes: ", $("#menu-panel"), $("#collapseThree"));
+    $("#menu-panel").removeClass("slider-in");
+    $("#collapseOne").collapse("hide");
+    $("#collapseTwo").collapse("hide");
+    $("#collapseThree").collapse("hide");
+    if ($(window).width() > 991 || $("#menu-panel").hasClass("slider-in")) {
+      $("#menu-panel").css(
+        "left",
+        $("#app-title-col").position().left);
+    } else {
+      $("#menu-panel").css("left", -1000);
     };
   };
 

@@ -8,7 +8,8 @@ var meetupapp = meetupapp || {};
     lat: 37.76,
     lng: -122.44
   };
-  meetupapp.zoom = 13;
+  meetupapp.zoomIn = 13;
+  meetupapp.zoomOut = 12;
   meetupapp.queryTime = Date.now();
   meetupapp.dateFilter = 3;
   meetupapp.rangeFilter = 4;

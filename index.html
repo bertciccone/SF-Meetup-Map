@@ -2,7 +2,7 @@
 <html lang="en">
 
   <head>
-    <title>San Francisco Meetup Events</title>
+    <title>San Francisco Meetups</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -98,38 +98,6 @@
           </div>
         </div>
 
-        <!-- <div id="date-location-col" class="col-xs-12 col-md-3">
-          <h2 class="filter-title">Date and Location</h2>
-          <div>
-            <label>Find events meeting in the next
-                <select data-bind="options: dateFilterOptions, optionsText: 'name', optionsValue: 'days', value: eventFilters.dateFilter, event: {change: applyEventFilters}">
-                </select>
-                </label>
-            <label>and within
-                    <select data-bind="options: rangeFilterOptions, optionsText: 'name', optionsValue: 'miles', value: eventFilters.rangeFilter, event: {change: applyEventFilters}">
-                  </select>
-                of</label>
-            <form data-bind="submit: geocodeLocationFilter">
-              <input id="locationFilter" type="text" placeholder="Address, area or landmark" data-bind="textInput: eventFilters.locationFilter">
-              <button id="searchButton" name="search" type="submit">▶︎</button>
-            </form>
-          </div>
-        </div>
-
-        <div id="categories-col" class="col-xs-12 col-md-9">
-          <h2 class="filter-title">Categories</h2>
-          <div data-bind="foreach: categoryList">
-            <span data-bind="text: name, click: $parent.toggleCategoryListItem, css: { categorySelected: selected() }" class="categoryListItem"></span>
-          </div>
-        </div>
-
-        <div id="events-col" class="col-xs-12 col-md-3">
-          <h2 class="events-title">Events</h2>
-          <div data-bind="foreach: eventList">
-            <p data-bind="text: name, click: $parent.selectEventListItem, visible: visible" class="eventListItem"></p>
-          </div>
-        </div> -->
-
         <div class="row">
           <div id="map-col" class="col-xs-12">
             <div id="map"></div>
@@ -141,7 +109,7 @@
       <!-- Copyright statement for footer -->
       <footer class="row">
         <div id="footer-col" class="col-xs-12">
-          <p class="footer-copyright">All rights reserved &#169; 2017 Bert Ciccone, Map data &#169; 2017 Google, Event data &#169; 2017 Meetup</p>
+          <p class="footer-copyright">&#169; 2017 Bert Ciccone, Map data &#169; 2017 Google, Event data &#169; 2017 Meetup</p>
         </div>
       </footer>
 
@@ -373,6 +341,7 @@
         }
         $("#menu-panel").toggleClass("slider-in");
       }, false);
+      $(window).resize(meetupapp.resetMenus);
     </script>
   </body>
 
