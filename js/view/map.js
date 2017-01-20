@@ -157,7 +157,8 @@ var meetupapp = meetupapp || {};
     }
   };
 
-  meetupapp.initMap = function () {
+  meetupapp.setupGoogleMapsApi = function () {
+    console.log("Starting setupGoogleMapsApi");
     meetupapp.largeInfowindow = new google.maps.InfoWindow();
     // Constructor creates a new map - only center and zoom are required.
     var position = new google.maps.LatLng(meetupapp.sfCoords);
@@ -173,6 +174,18 @@ var meetupapp = meetupapp || {};
       $('#locationFilter').get(0));
     // Bias the boundaries within the map for the zoom to area text.
     autocomplete.bindTo('bounds', meetupapp.map);
+  };
+
+  meetupapp.initMap = function () {
+
+    var setupGoogleMapsApiURL =
+      "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.setupGoogleMapsApi";
+    console.log("Making call to getScript");
+    var jqxhr = $.getScript(setupGoogleMapsApiURL, function (json) {
+      console.log("Called json function");
+    });
+    console.log("Returning jqxhr");
+    return jqxhr;
   };
 
   meetupapp.initMarkers = function () {

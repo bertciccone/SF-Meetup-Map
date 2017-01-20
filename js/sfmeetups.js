@@ -191,7 +191,19 @@ var meetupapp = meetupapp || {};
 
   console.log("sfmeetups.js");
 
-  var jqxhr = meetupapp.initEvents()
+  var jqxhrMap = meetupapp.initMap()
+    .fail(function () {
+      alert("Problem encountered while downloading Google map.");
+    })
+    .always(function () {
+      console.log("Google map initialization complete.");
+    });
+  // OK to do other stuff here...
+  jqxhrMap.always(function () {
+    console.log("Google map initialization final message.");
+  });
+
+  var jqxhrEvents = meetupapp.initEvents()
     .done(function () {
       console.log("Event initialization success.");
       console.log(meetupapp.categories);
@@ -206,7 +218,7 @@ var meetupapp = meetupapp || {};
       console.log("Event initialization complete.");
     });
   // OK to do other stuff here...
-  jqxhr.always(function () {
+  jqxhrEvents.always(function () {
     console.log("Event initialization final message.");
   });
 
