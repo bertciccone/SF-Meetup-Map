@@ -3,7 +3,6 @@ var meetupapp = meetupapp || {};
 
 (function () {
   'use strict';
-  console.log("appdata.js");
   meetupapp.sfCoords = {
     lat: 37.76,
     lng: -122.44
@@ -38,8 +37,6 @@ var meetupapp = meetupapp || {};
       meetupapp.events = [];
       meetupapp.categories = [];
       var categories = [];
-
-      console.log(json);
 
       // Use the json results to create arrays of events and markers on initialize.
       for (var i = 0; i < json.results.length; i++) {

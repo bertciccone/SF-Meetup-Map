@@ -73,7 +73,6 @@ var meetupapp = meetupapp || {};
     };
 
     function setLocationFilterCoords(location) {
-      // console.log("Setting location filter coordinates to: ", location);
       meetupapp.locationFilterCoords = location;
       meetupapp.setLocationFilterMarker(location);
     }
@@ -96,20 +95,17 @@ var meetupapp = meetupapp || {};
         var x = (λ2 - λ1) * Math.cos((φ1 + φ2) / 2);
         var y = (φ2 - φ1);
         var d = Math.sqrt(x * x + y * y) * R; // meters
-        // console.log("Calculated range: ", d * 0.000621371);
         return (d * 0.000621371) < self.eventFilters.rangeFilter();
       }
 
       function applyCategoryFilter(event) {
         var pass = false;
         var selectionFound = false;
-        // console.log("Category filter for: ", event);
         for (var i = 0; i < self.categoryList.length; i++) {
           var category = self.categoryList[i];
           if (category.selected()) {
             selectionFound = true;
             if (category.name == event.groupCategory.toLowerCase()) {
-              // console.log("Equal categories: ", category.name, event.groupCategory.toLowerCase());
               pass = true;
               break;
             };
@@ -126,7 +122,6 @@ var meetupapp = meetupapp || {};
         self.eventList()[index].visible(show);
         meetupapp.showMarker(event.id, show);
       });
-      // console.log("Exit applyEventFilters");
     };
 
     self.geocodeLocationFilter = function () {
@@ -147,7 +142,6 @@ var meetupapp = meetupapp || {};
               lat: results[0].geometry.location.lat(),
               lng: results[0].geometry.location.lng()
             };
-            console.log("Location filter coordinates: ", location);
             setLocationFilterCoords(location);
             self.applyEventFilters();
           } else {
@@ -156,7 +150,6 @@ var meetupapp = meetupapp || {};
           }
         });
       } else {
-        // console.log("Address: ", address);
         setLocationFilterCoords(meetupapp.sfCoords);
         self.applyEventFilters();
       };
@@ -167,7 +160,6 @@ var meetupapp = meetupapp || {};
 
     self.toggleCategoryListItem = function (data) {
       data.selected(!data.selected());
-      console.log("toggleCategoryListItem: ", data.selected());
       self.applyEventFilters();
     };
 
@@ -179,7 +171,6 @@ var meetupapp = meetupapp || {};
     });
 
     self.selectEventListItem = function (data, event) {
-      // console.log("selectEventListItem: ", data.name(), data.id());
       meetupapp.resetMenus();
       meetupapp.populateInfoWindow(
         meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
@@ -189,37 +180,19 @@ var meetupapp = meetupapp || {};
 
   }; // ViewModel
 
-  console.log("sfmeetups.js");
-
   var jqxhrMap = meetupapp.initMap()
     .fail(function () {
       alert("Problem encountered while downloading Google map.");
-    })
-    .always(function () {
-      console.log("Google map initialization complete.");
     });
-  // OK to do other stuff here...
-  jqxhrMap.always(function () {
-    console.log("Google map initialization final message.");
-  });
 
   var jqxhrEvents = meetupapp.initEvents()
     .done(function () {
-      console.log("Event initialization success.");
-      console.log(meetupapp.categories);
       meetupapp.setLocationFilterMarker(meetupapp.locationFilterCoords);
       meetupapp.initMarkers();
       ko.applyBindings(new ViewModel());
     })
     .fail(function () {
       alert("Problem encountered while downloading Meetup events.");
-    })
-    .always(function () {
-      console.log("Event initialization complete.");
     });
-  // OK to do other stuff here...
-  jqxhrEvents.always(function () {
-    console.log("Event initialization final message.");
-  });
 
 })();

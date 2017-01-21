@@ -3,7 +3,6 @@ var meetupapp = meetupapp || {};
 
 (function ($) {
   'use strict';
-  console.log("map.js");
 
   // Create a styles array to use with the map.
   var styles = [{
@@ -97,7 +96,6 @@ var meetupapp = meetupapp || {};
       meetupapp.locationFilterMarker.position = position;
     } else {
       var locationFilterIcon = makeMarkerIcon('f00');
-      console.log("Setting location filter marker", location);
       meetupapp.locationFilterMarker = new google.maps.Marker({
         position,
         title: "Your Search Location",
@@ -105,7 +103,6 @@ var meetupapp = meetupapp || {};
         icon: locationFilterIcon
       });
     };
-    console.log("Setting map for search location marker");
     meetupapp.locationFilterMarker.setMap(meetupapp.map);
   };
 
@@ -141,16 +138,16 @@ var meetupapp = meetupapp || {};
         toggleBounce(marker);
         var date = new Date(event.time);
         infowindow.setContent(
-          '<img class="logo-image" src="' + event.group_photo + '">' +
-          '<div>Group: ' + event.groupName + '</div>' +
-          '<div>Event: ' + event.name + '</div>' +
-          '<div>Date: ' + date.toLocaleDateString() + '</div>' +
-          '<div>Time: ' + date.toLocaleTimeString() + '</div>' +
-          '<div>RSVP Yes: ' + event.yes_rsvp_count + '</div>' +
-          '<div>Venue: ' + event.venueName + '</div>' +
-          '<div>Address: ' + event.venueAddress + '</div>' +
-          '<div>Category: ' + event.groupCategory + '</div>' +
-          '<a target="_blank" href="' + event.event_url + '">Event page on Meetup.com</a>'
+          '<img class="info-image" src="' + event.group_photo + '">' +
+          '<p class="info-text"><span class="info-label-text">Group: </span>' + event.groupName + '</p>' +
+          '<p class="info-text"><span class="info-label-text">Event: </span>' + event.name + '</p>' +
+          '<p class="info-text"><span class="info-label-text">Date: </span>' + date.toLocaleDateString() + '</p>' +
+          '<p class="info-text"><span class="info-label-text">Time: </span>' + date.toLocaleTimeString() + '</p>' +
+          '<p class="info-text"><span class="info-label-text">RSVP Yes: </span>' + event.yes_rsvp_count + '</p>' +
+          '<p class="info-text"><span class="info-label-text">Venue: </span>' + event.venueName + '</p>' +
+          '<p class="info-text"><span class="info-label-text">Address: </span>' + event.venueAddress + '</p>' +
+          '<p class="info-text"><span class="info-label-text">Category: </span>' + event.groupCategory + '</p>' +
+          '<a class="info-link-text" target="_blank" href="' + event.event_url + '">Event page on Meetup.com</a>'
         );
         infowindow.open(map, marker);
       }, 750);
@@ -158,7 +155,6 @@ var meetupapp = meetupapp || {};
   };
 
   meetupapp.setupGoogleMapsApi = function () {
-    console.log("Starting setupGoogleMapsApi");
     meetupapp.largeInfowindow = new google.maps.InfoWindow();
     // Constructor creates a new map - only center and zoom are required.
     var position = new google.maps.LatLng(meetupapp.sfCoords);
@@ -180,11 +176,8 @@ var meetupapp = meetupapp || {};
 
     var setupGoogleMapsApiURL =
       "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.setupGoogleMapsApi";
-    console.log("Making call to getScript");
-    var jqxhr = $.getScript(setupGoogleMapsApiURL, function (json) {
-      console.log("Called json function");
-    });
-    console.log("Returning jqxhr");
+    var jqxhr = $.getScript(setupGoogleMapsApiURL, function (json) {});
+    meetupapp.resetMenus();
     return jqxhr;
   };
 
@@ -233,7 +226,6 @@ var meetupapp = meetupapp || {};
   };
 
   meetupapp.resetMenus = function () {
-    console.log("Classes: ", $("#menu-panel"), $("#collapseThree"));
     $("#menu-panel").removeClass("slider-in");
     $("#collapseOne").collapse("hide");
     $("#collapseTwo").collapse("hide");
@@ -245,6 +237,10 @@ var meetupapp = meetupapp || {};
     } else {
       $("#menu-panel").css("left", -1000);
     };
+    var bodyHeight = $(window).height() - $("#app-title-col").outerHeight() - $("#footer-col").outerHeight();
+    $("#map-col").outerHeight(bodyHeight);
+    $(".events-col").outerHeight(bodyHeight * 0.6);
+    console.log(bodyHeight);
   };
 
 })(jQuery);

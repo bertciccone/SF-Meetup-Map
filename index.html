@@ -136,7 +136,6 @@
 
       body {
         font-family: "Roboto", sans-serif;
-        /*background-color: rgba(218, 247, 220, 1);*/
       }
 
       h1 {
@@ -156,7 +155,6 @@
       }
 
       #app-title-col {
-        margin-top: 0.5em;
         text-align: center;
         background-color: #19a0d8;
       }
@@ -199,7 +197,7 @@
       .panel-heading,
       .panel-collapse {
         background-color: rgba(134, 187, 216, 1) !important;
-        opacity: 0.8;
+        opacity: 0.95;
       }
 
       .date-location-col,
@@ -209,7 +207,6 @@
       }
 
       .events-col {
-        height: 40em;
         text-align: center;
         overflow-y: auto;
       }
@@ -247,13 +244,26 @@
       }
 
       .date-location-text,
-      .eventListItem {
+      .eventListItem,
+      .info-text {
         font-size: 1.2em;
+        font-weight: 400;
+        color: rgba(47, 72, 88, 1);
+      }
+
+      .info-link-text {
+        font-size: 1.2em;
+        font-weight: 400;
+      }
+
+      .info-label-text {
+        font-size: 1em;
+        font-weight: bold;
         color: rgba(47, 72, 88, 1);
       }
 
       #map-col {
-        margin-top: 0.5em;
+        margin-top: 0.2em;
         height: 60em;
         width: 100%;
         background-color: #19a0d8;
@@ -266,21 +276,26 @@
         right: 0px;
         position: absolute;
       }
+
+      .info-image {
+        margin-top: .2em;
+        margin-bottom: 1em;
+        width: 8em;
+      }
       /* */
       /* Footer Styles */
       /* */
 
       #footer-col {
-        margin-top: 0.5em;
+        margin-top: 0.2em;
         height: 4em;
         background-color: #19a0d8;
       }
 
       .footer-copyright {
-        margin-top: 0.5em;
+        margin-top: 0.2em;
         text-align: center;
         font-weight: 300;
-        /*color: rgba(51, 102, 153, 1);*/
         color: white;
       }
       /* */
@@ -300,21 +315,6 @@
           left: -1000px;
           transition: 0.1s ease;
         }
-        .events-col {
-          height: 30em;
-        }
-        #map-col {
-          height: 46em;
-        }
-      }
-
-      @media screen and (max-width: 767px) {
-        .events-col {
-          height: 17em;
-        }
-        #map-col {
-          height: 30em;
-        }
       }
     </style>
     <script src="js/lib/jquery-3.1.0.min.js"></script>
@@ -323,7 +323,6 @@
     <script src="js/model/appdata.js"></script>
     <script src="js/view/map.js"></script>
     <script src="js/sfmeetups.js"></script>
-    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.initMap"></script> -->
     <script>
       $("#hamburger").get(0).addEventListener("click", function(event) {
         if ($(".slider-in").get(0)) {
