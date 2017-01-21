@@ -28,7 +28,7 @@
             <div class="container">
 
               <div class="row">
-                <div class="panel-group col-xs-12" id="accordion" role="tablist" aria-multiselectable="false">
+                <div class="panel-group col-xs-12" id="accordion" role="tablist" aria-multiselectable="true">
 
                   <div class="panel panel-default col-xs-12 col-md-4 first-panel">
                     <div class="panel-heading" role="tab" id="headingOne">
@@ -130,9 +130,10 @@
         $color4: rgba(158, 228, 147, 1);
         $color5: rgba(218, 247, 220, 1);
       */
-      /** {
+
+      * {
         outline: 1px solid red !important;
-      }*/
+      }
 
       body {
         font-family: "Roboto", sans-serif;
@@ -312,7 +313,7 @@
         .panel-background {
           position: absolute;
           z-index: 1;
-          left: -1000px;
+          left: -1200px;
           transition: 0.1s ease;
         }
       }
@@ -324,19 +325,19 @@
     <script src="js/view/map.js"></script>
     <script src="js/sfmeetups.js"></script>
     <script>
-      $("#hamburger").get(0).addEventListener("click", function(event) {
-        if ($(".slider-in").get(0)) {
-          $("#menu-panel").animate({
-            "position": "absolute",
-            "left": "-=1000px"
+      $('#hamburger').get(0).addEventListener('click', function(event) {
+        if ($('.slider-in').get(0)) {
+          $('#menu-panel').animate({
+            'position': 'absolute',
+            'left': '-=1200px'
           });
         } else {
-          $("#menu-panel").animate({
-            "position": "absolute",
-            "left": $("#app-title-col").position().left
+          $('#menu-panel').animate({
+            'position': 'absolute',
+            'left': $('#app-title-col').position().left
           });
         }
-        $("#menu-panel").toggleClass("slider-in");
+        $('#menu-panel').toggleClass('slider-in');
       }, false);
       $(window).resize(meetupapp.resetMenus);
     </script>

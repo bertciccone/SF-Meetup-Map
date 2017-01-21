@@ -98,7 +98,7 @@ var meetupapp = meetupapp || {};
       var locationFilterIcon = makeMarkerIcon('f00');
       meetupapp.locationFilterMarker = new google.maps.Marker({
         position,
-        title: "Your Search Location",
+        title: 'Your Search Location',
         animation: google.maps.Animation.DROP,
         icon: locationFilterIcon
       });
@@ -175,7 +175,7 @@ var meetupapp = meetupapp || {};
   meetupapp.initMap = function () {
 
     var setupGoogleMapsApiURL =
-      "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.setupGoogleMapsApi";
+      'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.setupGoogleMapsApi';
     var jqxhr = $.getScript(setupGoogleMapsApiURL, function (json) {});
     meetupapp.resetMenus();
     return jqxhr;
@@ -226,21 +226,20 @@ var meetupapp = meetupapp || {};
   };
 
   meetupapp.resetMenus = function () {
-    $("#menu-panel").removeClass("slider-in");
-    $("#collapseOne").collapse("hide");
-    $("#collapseTwo").collapse("hide");
-    $("#collapseThree").collapse("hide");
-    if ($(window).width() > 991 || $("#menu-panel").hasClass("slider-in")) {
-      $("#menu-panel").css(
-        "left",
-        $("#app-title-col").position().left);
+    console.log("resetMenus");
+    if ($('#menu-panel').hasClass('slider-in')) {
+      console.log("slider in");
+      $('#menu-panel').css('left', -1200);
+      $('#menu-panel').removeClass('slider-in');
     } else {
-      $("#menu-panel").css("left", -1000);
+      console.log("reset left", $('#app-title-col').position().left);
+      $('#menu-panel').css(
+        'left',
+        $('#app-title-col').position().left);
     };
-    var bodyHeight = $(window).height() - $("#app-title-col").outerHeight() - $("#footer-col").outerHeight();
-    $("#map-col").outerHeight(bodyHeight);
-    $(".events-col").outerHeight(bodyHeight * 0.6);
-    console.log(bodyHeight);
+    var bodyHeight = $(window).height() - $('#app-title-col').outerHeight() - $('#footer-col').outerHeight();
+    $('#map-col').outerHeight(bodyHeight);
+    $('.events-col').outerHeight(bodyHeight * 0.6);
   };
 
 })(jQuery);
