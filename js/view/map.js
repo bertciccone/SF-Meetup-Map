@@ -227,6 +227,9 @@ var meetupapp = meetupapp || {};
 
   meetupapp.resetMenus = function () {
     console.log("resetMenus");
+    $('#collapseOne').collapse('hide');
+    $('#collapseTwo').collapse('hide');
+    $('#collapseThree').collapse('hide');
     if ($('#menu-panel').hasClass('slider-in')) {
       console.log("slider in");
       $('#menu-panel').css('left', -1200);
