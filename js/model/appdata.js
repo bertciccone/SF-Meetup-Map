@@ -1,8 +1,11 @@
-/* global model */
+/* global model in MVVM structure */
+
 var meetupapp = meetupapp || {};
 
 (function () {
   'use strict';
+
+  // App constants
   meetupapp.sfCoords = {
     lat: 37.76,
     lng: -122.44
@@ -10,10 +13,6 @@ var meetupapp = meetupapp || {};
   meetupapp.zoomIn = 13;
   meetupapp.zoomOut = 12;
   meetupapp.queryTime = Date.now();
-  meetupapp.dateFilter = 3;
-  meetupapp.rangeFilter = 4;
-  meetupapp.locationFilter = "";
-  meetupapp.locationFilterCoords = meetupapp.sfCoords;
 
   meetupapp.initEvents = function () {
 

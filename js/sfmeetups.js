@@ -171,7 +171,7 @@ var meetupapp = meetupapp || {};
     });
 
     self.selectEventListItem = function (data, event) {
-      meetupapp.resetMenus();
+      meetupapp.closeMenus();
       meetupapp.populateInfoWindow(
         meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
     };
@@ -179,6 +179,11 @@ var meetupapp = meetupapp || {};
     self.applyEventFilters();
 
   }; // ViewModel
+
+  meetupapp.dateFilter = 3;
+  meetupapp.rangeFilter = 4;
+  meetupapp.locationFilter = "";
+  meetupapp.locationFilterCoords = meetupapp.sfCoords;
 
   var jqxhrMap = meetupapp.initMap()
     .fail(function () {

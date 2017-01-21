@@ -173,10 +173,9 @@ var meetupapp = meetupapp || {};
   };
 
   meetupapp.initMap = function () {
-
     var setupGoogleMapsApiURL =
       'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.setupGoogleMapsApi';
-    var jqxhr = $.getScript(setupGoogleMapsApiURL, function (json) {});
+    var jqxhr = $.getScript(setupGoogleMapsApiURL);
     meetupapp.resetMenus();
     return jqxhr;
   };
@@ -225,24 +224,35 @@ var meetupapp = meetupapp || {};
     };
   };
 
+  meetupapp.closeMenus = function () {
+    // Close any open accordion panels
+    $('#collapseOne').removeClass('in');
+    $('#collapseTwo').removeClass('in');
+    $('#collapseThree').removeClass('in');
+    // if ($('#menu-panel').hasClass('slider-in')) {
+    // If the small-width slider is showing, hide it
+    console.log("slider in");
+    $('#menu-panel').css('left', -1200);
+    $('#menu-panel').animate({
+      'position': 'absolute',
+      'left': '-1200px'
+    });
+    $('#menu-panel').removeClass('slider-in');
+    // };
+  };
+
+  // At initialization and window resizing, reset the map and accordion menus
   meetupapp.resetMenus = function () {
     console.log("resetMenus");
-    $('#collapseOne').collapse('hide');
-    $('#collapseTwo').collapse('hide');
-    $('#collapseThree').collapse('hide');
-    if ($('#menu-panel').hasClass('slider-in')) {
-      console.log("slider in");
-      $('#menu-panel').css('left', -1200);
-      $('#menu-panel').removeClass('slider-in');
-    } else {
-      console.log("reset left", $('#app-title-col').position().left);
-      $('#menu-panel').css(
-        'left',
-        $('#app-title-col').position().left);
-    };
+    // Adjust the map height to fill the viewport
     var bodyHeight = $(window).height() - $('#app-title-col').outerHeight() - $('#footer-col').outerHeight();
     $('#map-col').outerHeight(bodyHeight);
     $('.events-col').outerHeight(bodyHeight * 0.6);
+    meetupapp.closeMenus();
+    console.log("reset left", $('#map-col').position().left);
+    $('#menu-panel').css(
+      'left',
+      $('#map-col').position().left);
   };
 
 })(jQuery);
