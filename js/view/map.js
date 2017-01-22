@@ -1,10 +1,11 @@
-/* localized $ name for jQuery, map view */
+// View for MVVM structure.
+
 var meetupapp = meetupapp || {};
 
 (function ($) {
   'use strict';
 
-  // Create a styles array to use with the map.
+  // Sytles array to use with the map.
   var styles = [{
     featureType: 'water',
     stylers: [{
@@ -89,6 +90,7 @@ var meetupapp = meetupapp || {};
     return markerImage;
   };
 
+  // Drop a distinct marker for the location filter.
   meetupapp.setLocationFilterMarker = function (location) {
     var position = new google.maps.LatLng(location);
     if (meetupapp.locationFilterMarker) {
@@ -106,14 +108,13 @@ var meetupapp = meetupapp || {};
     meetupapp.locationFilterMarker.setMap(meetupapp.map);
   };
 
+  // Display a marker on the map.
   meetupapp.showMarker = function (id, show) {
     meetupapp.markers[id].setMap(
       show ? meetupapp.map : null);
   };
 
-  // This function populates the infowindow when the marker is clicked. We'll only allow
-  // one infowindow which will open at the marker that is clicked, and populate based
-  // on that markers position.
+  // Create a marker bounce animation, populate and open an infowindow for an event.
   meetupapp.populateInfoWindow = function (marker, event, infowindow) {
 
     function toggleBounce(marker) {
@@ -154,32 +155,7 @@ var meetupapp = meetupapp || {};
     }
   };
 
-  meetupapp.setupGoogleMapsApi = function () {
-    meetupapp.largeInfowindow = new google.maps.InfoWindow();
-    // Constructor creates a new map - only center and zoom are required.
-    var position = new google.maps.LatLng(meetupapp.sfCoords);
-    var wideWindow = $(window).width() > 767;
-    var zoom = wideWindow ? meetupapp.zoomIn : meetupapp.zoomOut;
-    meetupapp.map = new google.maps.Map($('#map').get(0), {
-      center: position,
-      zoom: zoom,
-      styles: styles,
-      mapTypeControl: false
-    });
-    var autocomplete = new google.maps.places.Autocomplete(
-      $('#locationFilter').get(0));
-    // Bias the boundaries within the map for the zoom to area text.
-    autocomplete.bindTo('bounds', meetupapp.map);
-  };
-
-  meetupapp.initMap = function () {
-    var setupGoogleMapsApiURL =
-      'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.setupGoogleMapsApi';
-    var jqxhr = $.getScript(setupGoogleMapsApiURL);
-    meetupapp.resetMenus();
-    return jqxhr;
-  };
-
+  // Create markers for the events, dislay them on the map and setup Google Maps listeners for marker hover and click.
   meetupapp.initMarkers = function () {
 
     function createMarker(event, id) {
@@ -224,35 +200,84 @@ var meetupapp = meetupapp || {};
     };
   };
 
+  // Adjust the map height to fill the space between header and footer.
+  meetupapp.setMapHeight = function () {
+    var bodyHeight = $(window).height() - $('#app-title-col').outerHeight() - $('#footer-col').outerHeight();
+    $('#map-col').outerHeight(bodyHeight);
+    $('.events-col').outerHeight(bodyHeight * 0.55);
+    $('.categories-col').outerHeight(bodyHeight * 0.55);
+  };
+
+  // Close any open menus and/or hide the menu slider.
   meetupapp.closeMenus = function () {
-    // Close any open accordion panels
     $('#collapseOne').removeClass('in');
     $('#collapseTwo').removeClass('in');
     $('#collapseThree').removeClass('in');
-    // if ($('#menu-panel').hasClass('slider-in')) {
-    // If the small-width slider is showing, hide it
-    console.log("slider in");
-    $('#menu-panel').css('left', -1200);
-    $('#menu-panel').animate({
-      'position': 'absolute',
-      'left': '-1200px'
-    });
-    $('#menu-panel').removeClass('slider-in');
-    // };
+    if ($('#menu-panel').hasClass('slider-in')) {
+      // If the small - width slider is showing, hide it
+      console.log("slider in");
+      $('#menu-panel').css('left', -1200);
+      $('#menu-panel').animate({
+        'position': 'absolute',
+        'left': '-1200px'
+      });
+      $('#menu-panel').removeClass('slider-in');
+    };
   };
 
-  // At initialization and window resizing, reset the map and accordion menus
-  meetupapp.resetMenus = function () {
-    console.log("resetMenus");
-    // Adjust the map height to fill the viewport
-    var bodyHeight = $(window).height() - $('#app-title-col').outerHeight() - $('#footer-col').outerHeight();
-    $('#map-col').outerHeight(bodyHeight);
-    $('.events-col').outerHeight(bodyHeight * 0.6);
-    meetupapp.closeMenus();
-    console.log("reset left", $('#map-col').position().left);
-    $('#menu-panel').css(
-      'left',
-      $('#map-col').position().left);
+  // Initialize the menus and map height.
+  meetupapp.initMenus = function () {
+    $('#hamburger').get(0).addEventListener('click', function (event) {
+      if ($('.slider-in').get(0)) {
+        $('#menu-panel').animate({
+          'position': 'absolute',
+          'left': '-=1200px'
+        });
+      } else {
+        $('#menu-panel').animate({
+          'position': 'absolute',
+          'left': $('#map-col').position().left
+        });
+      }
+      $('#menu-panel').toggleClass('slider-in');
+    }, false);
+    $(window).resize(function () {
+      console.log("resetMenus");
+      meetupapp.setMapHeight();
+      meetupapp.closeMenus();
+      console.log("reset left", $('#map-col').position().left);
+      $('#menu-panel').css(
+        'left',
+        $('#map-col').position().left);
+    });
+    meetupapp.setMapHeight();
+  };
+
+  // Draw the Google map and setup location autocomplete.
+  meetupapp.createMap = function () {
+    meetupapp.largeInfowindow = new google.maps.InfoWindow();
+    // Constructor creates a new map - only center and zoom are required.
+    var position = new google.maps.LatLng(meetupapp.sfCoords);
+    var wideWindow = $(window).width() > 767;
+    var zoom = wideWindow ? meetupapp.zoomIn : meetupapp.zoomOut;
+    meetupapp.map = new google.maps.Map($('#map').get(0), {
+      center: position,
+      zoom: zoom,
+      styles: styles,
+      mapTypeControl: false
+    });
+    var autocomplete = new google.maps.places.Autocomplete(
+      $('#locationFilter').get(0));
+    // Bias the boundaries within the map for the zoom to area text.
+    autocomplete.bindTo('bounds', meetupapp.map);
+  };
+
+  // Asynchronously load the Google Maps API and the map.
+  meetupapp.initMap = function () {
+    var setupGoogleMapsApiURL =
+      'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCy81qm7U0uSCXrRH3BJJ9UoeQq3etdvHQ&v=3&callback=meetupapp.createMap';
+    var jqxhr = $.getScript(setupGoogleMapsApiURL);
+    return jqxhr;
   };
 
 })(jQuery);

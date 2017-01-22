@@ -130,10 +130,9 @@
         $color4: rgba(158, 228, 147, 1);
         $color5: rgba(218, 247, 220, 1);
       */
-
-      * {
+      /** {
         outline: 1px solid red !important;
-      }
+      }*/
 
       body {
         font-family: "Roboto", sans-serif;
@@ -296,7 +295,7 @@
       .footer-copyright {
         margin-top: 0.2em;
         text-align: center;
-        font-weight: 300;
+        font-weight: 100;
         color: white;
       }
       /* */
@@ -324,23 +323,6 @@
     <script src="js/model/appdata.js"></script>
     <script src="js/view/map.js"></script>
     <script src="js/sfmeetups.js"></script>
-    <script>
-      $('#hamburger').get(0).addEventListener('click', function(event) {
-        if ($('.slider-in').get(0)) {
-          $('#menu-panel').animate({
-            'position': 'absolute',
-            'left': '-=1200px'
-          });
-        } else {
-          $('#menu-panel').animate({
-            'position': 'absolute',
-            'left': $('#map-col').position().left
-          });
-        }
-        $('#menu-panel').toggleClass('slider-in');
-      }, false);
-      $(window).resize(meetupapp.resetMenus);
-    </script>
   </body>
 
 </html>

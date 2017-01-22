@@ -1,10 +1,11 @@
-/* global variables and knockout ViewModel */
+// ViewModel for MVVM structure.
+
 var meetupapp = meetupapp || {};
 
-/* initialize the ViewModel */
 (function () {
   'use strict';
 
+  // Initialize the ViewModel.
   var ViewModel = function () {
 
     var self = this;
@@ -15,7 +16,8 @@ var meetupapp = meetupapp || {};
       this.visible = ko.observable(false);
     };
 
-    // Setup the filter options.
+    // Setup the static filter options.
+
     self.dateFilterOptions = [{
       name: "1 day",
       days: 1
@@ -50,12 +52,14 @@ var meetupapp = meetupapp || {};
       miles: 7
     }];
 
+    // Use knockout to manage date, range and location filter inputs.
     self.eventFilters = {
       dateFilter: ko.observable(meetupapp.dateFilter),
       rangeFilter: ko.observable(meetupapp.rangeFilter),
       locationFilter: ko.observable(meetupapp.locationFilter)
     };
 
+    // Use knockout to manage user selections for filtering by category.
     function createCategoryList(categories) {
       var categoryList = [{
         name: categories[0],
@@ -72,11 +76,13 @@ var meetupapp = meetupapp || {};
       return categoryList;
     };
 
+    // Save the location filter coordinates and drop the marker.
     function setLocationFilterCoords(location) {
       meetupapp.locationFilterCoords = location;
       meetupapp.setLocationFilterMarker(location);
     }
 
+    // Use the selected filters to reduce the marker set.
     self.applyEventFilters = function () {
 
       function applyDateFilter(event) {
@@ -124,13 +130,11 @@ var meetupapp = meetupapp || {};
       });
     };
 
+    // Use knockout to manage the location filter input and find the coordinates for filtering by location.
     self.geocodeLocationFilter = function () {
       var geocoder = new google.maps.Geocoder();
       var address = self.eventFilters.locationFilter();
-      // Make sure the address isn't blank.
       if (address) {
-        // Geocode the address/area entered to get the center. Then, center the map
-        // on it and zoom in
         geocoder.geocode({
           address: address,
           componentRestrictions: {
@@ -145,8 +149,7 @@ var meetupapp = meetupapp || {};
             setLocationFilterCoords(location);
             self.applyEventFilters();
           } else {
-            window.alert('We could not find that location - try entering a more' +
-              ' specific place.');
+            window.alert('We could not find that location - try entering a more specific place.');
           }
         });
       } else {
@@ -155,41 +158,42 @@ var meetupapp = meetupapp || {};
       };
     };
 
-    // Setup the category filter list.
+    // Create the knockout category list and selection handler.
     self.categoryList = createCategoryList(meetupapp.categories);
-
     self.toggleCategoryListItem = function (data) {
       data.selected(!data.selected());
       self.applyEventFilters();
     };
 
-    // Setup the sidebar event selection list.
+    // Create the knockout event list and selection handler.
     self.eventList = ko.observableArray([]);
-
     meetupapp.events.forEach(function (event) {
       self.eventList.push(new EventListItem(event.name, event.id));
     });
-
     self.selectEventListItem = function (data, event) {
       meetupapp.closeMenus();
       meetupapp.populateInfoWindow(
         meetupapp.markers[data.id()], meetupapp.events[data.id()], meetupapp.largeInfowindow);
     };
 
+    // Filter the markers using the filter defaults.
     self.applyEventFilters();
 
   }; // ViewModel
 
+  // Initialize filter defaults.
   meetupapp.dateFilter = 3;
   meetupapp.rangeFilter = 4;
   meetupapp.locationFilter = "";
   meetupapp.locationFilterCoords = meetupapp.sfCoords;
 
+  // Asynchronously create the map and post an alert on error.
   var jqxhrMap = meetupapp.initMap()
     .fail(function () {
       alert("Problem encountered while downloading Google map.");
     });
 
+  // Asynchronously get the events and post an alert on error.
   var jqxhrEvents = meetupapp.initEvents()
     .done(function () {
       meetupapp.setLocationFilterMarker(meetupapp.locationFilterCoords);
@@ -199,5 +203,8 @@ var meetupapp = meetupapp || {};
     .fail(function () {
       alert("Problem encountered while downloading Meetup events.");
     });
+
+  // Initialize the responsive menus and map area according to window size.
+  meetupapp.initMenus();
 
 })();

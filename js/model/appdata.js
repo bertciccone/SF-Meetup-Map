@@ -1,4 +1,4 @@
-/* global model in MVVM structure */
+// Model for MVVM structure.
 
 var meetupapp = meetupapp || {};
 
@@ -14,8 +14,10 @@ var meetupapp = meetupapp || {};
   meetupapp.zoomOut = 12;
   meetupapp.queryTime = Date.now();
 
+  // Use Meetup API to get event data.
   meetupapp.initEvents = function () {
 
+    // Create the set of unique event categories from the event data.
     function findUniqueCategories(categories) {
       categories.sort();
       var uniqueCategories = [categories[0]];
@@ -37,7 +39,7 @@ var meetupapp = meetupapp || {};
       meetupapp.categories = [];
       var categories = [];
 
-      // Use the json results to create arrays of events and markers on initialize.
+      // Use the json results to create arrays of events and categories on initialize.
       for (var i = 0; i < json.results.length; i++) {
 
         var eventData = json.results[i];
