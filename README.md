@@ -8,6 +8,6 @@ Find San Francisco Meetup events based on date (up to three days in advance), lo
 
 Browse to [San Francisco Meeups](bertcuda.github.io/fend-meetupmap/index.html).
 
-#Downloading sources
+#Downloading sources and running locally
 
-Use Git to clone the app at [frontend-nanodegree-arcade-game](https://github.com/bertcuda/frontend-nanodegree-arcade-game) into your local folder. Alternatively, download the meetupmap.zip file at [frontend-nanodegree-arcade-game](https://github.com/bertcuda/frontend-nanodegree-arcade-game/bugs.zip) into your local folder. After cloning or unzipping, navigate into the `fend-meetupmap` folder and open `index.html` in your browser to run the app.
+Use Git to clone the app at [fend-meetupmap](https://github.com/bertcuda/fend-meetupmap.git) into your local folder. Alternatively, download the meetupmap.zip file at [frontend-nanodegree-arcade-game](https://github.com/bertcuda/fend-meetupmap.git/meetupmap.zip) into your local folder. After cloning or unzipping, navigate into the `fend-meetupmap` folder and open `index.html` in your browser to run the app.
