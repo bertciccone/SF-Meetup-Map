@@ -1,4 +1,4 @@
-# fend-meetupmap
+# SF-Meetup-Map
 
 #San Francisco Meetups
 
@@ -6,11 +6,11 @@ Find San Francisco Meetup events based on date (up to three days in advance), lo
 
 #Running the app
 
-Browse to [San Francisco Meetups](https://bertcuda.github.io/fend-meetupmap/index.html).
+Browse to [San Francisco Meetups](https://bertciccone.github.io/fend-meetupmap/).
 
 #Downloading sources and running locally
 
-Use Git to clone the app at [fend-meetupmap](https://github.com/bertcuda/fend-meetupmap.git) into your local folder. Alternatively, download the fend-meetupmap.zip file at [fend-meetupmap](https://github.com/bertcuda/fend-meetupmap.git) into your local folder. After cloning or unzipping, navigate into the `fend-meetupmap` folder and open `index.html` in your browser to run the app.
+Use Git to clone the app at [SF-Meetup-Map](https://github.com/bertciccone/fend-meetupmap.git) into your local folder. Alternatively, download the fend-meetupmap.zip file at [SF-Meetup-Map](https://github.com/bertciccone/SF-Meetup-Map.git) into your local folder. After cloning or unzipping, navigate into the `SF-Meetup-Map` folder and open `index.html` in your browser to run the app.
 
 #References
 - Google Maps APIs course example code for Google Maps API
